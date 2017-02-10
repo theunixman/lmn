@@ -1,0 +1,10 @@
+{% extends 'lmn/base.html' %}
+{% block content %}
+
+
+<h2>{{ note.show.artist.name }} at {{ note.show.venue.name }} by <a href="{% url 'lmn:user_profile' user_pk=note.user.pk %}">{{ user.username }}</a></h2>
+
+<p><b>{{ note.title}}</b></p>
+<p>{{ note.text }}</b>
+
+{% endblock %}
