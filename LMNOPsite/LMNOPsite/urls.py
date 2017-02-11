@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
-from lmn import views
+from lmn import views, views_users
 
 
 urlpatterns = [
@@ -26,7 +26,7 @@ urlpatterns = [
 
     url(r'^accounts/login/$', auth_views.login, name='login'),
     url(r'^accounts/logout/$', auth_views.logout, name='logout'),
-    url(r'^register/$', views.register, name='register'),
+    url(r'^register/$', views_users.register, name='register'),
 
     url(r'^', include('lmn.urls') ),
 

@@ -43,7 +43,7 @@ class Note(models.Model):
     show = models.ForeignKey(Show, blank=False)
     user = models.ForeignKey('auth.User', blank=False)
     title = models.CharField(max_length=200, blank=False)
-    text = models.TextField(blank=False)
+    text = models.TextField(max_length=1000, blank=False)
     posted_date = models.DateTimeField(blank=False)
 
     def publish(self):
