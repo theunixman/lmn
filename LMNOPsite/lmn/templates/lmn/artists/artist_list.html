@@ -22,6 +22,8 @@
 <P>{{ artist }}</p>
   <p>See venues played, notes, and add your own <a href="{% url 'lmn:venues_for_artist' artist_pk=artist.pk %}">{{ artist.name }} notes</a>
 
+{% empty %}
+<P>No artists found</P>
 {% endfor %}
 
 {% endblock %}

@@ -10,6 +10,14 @@ import datetime
 # default, so add this to prevent more than one user with the same email.
 User._meta.get_field('email')._unique = True
 
+#Require email, first name and last name
+User._meta.get_field('email').blank = False
+User._meta.get_field('last_name').blank = False
+User._meta.get_field('first_name').blank = False
+
+
+
+
 ''' A music artist '''
 class Artist(models.Model):
     name = models.CharField(max_length=200, blank=False);

@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from lmn.forms import NewNoteForm
+from django.contrib.auth.models import User
+from lmn.forms import NewNoteForm, UserRegistrationForm
 import string
 
 # Test forms don't accept invalid data
@@ -55,7 +56,93 @@ class NewNoteFormTests(TestCase):
 
 
 class RegistrationFormTests(TestCase):
-    pass
+
+    # missing fields
+
+    def test_register_user_with_valid_data_is_valid(self):
+        form_data = { 'username' : 'bob' , 'email' : 'bob@bob.com', 'first_name' : 'bob', 'last_name' : 'whatever', 'password1' : 'qwertyuiop', 'password2' : 'qwertyuiop' }
+        form = UserRegistrationForm(form_data)
+        self.assertTrue(form.is_valid())
+
+
+    def test_register_user_with_missing_data_fails(self):
+        form_data = { 'username': 'bob', 'email' : 'bob@bob.com', 'first_name' : 'bob', 'last_name' : 'whatever', 'password1' : 'qwertyuiop', 'password2' : 'qwertyuiop' }
+        # Remove each key-value from dictionary, assert form not valid
+        for field in form_data.keys():
+            data = dict(form_data)
+            del(data[field])
+            form = UserRegistrationForm(data)
+            self.assertFalse(form.is_valid())
+
+
+    def test_register_user_with_password_mismatch_fails(self):
+        form_data = { 'username' : 'another_bob' , 'email' : 'bob@bob.com', 'first_name' : 'bob', 'last_name' : 'whatever', 'password1' : 'qwertyuiop', 'password2' : 'qwertyuiop2' }
+        form = UserRegistrationForm(form_data)
+        self.assertFalse(form.is_valid())
+
+
+    def test_register_user_with_email_already_in_db_fails(self):
+
+        # Create a user with email bob@bob.com
+        bob = User(username='bob', email='bob@bob.com')
+        bob.save()
+
+        # attempt to create another user with same email
+        form_data = { 'username' : 'another_bob' , 'email' : 'bob@bob.com', 'first_name' : 'bob', 'last_name' : 'whatever', 'password1' : 'qwertyuiop', 'password2' : 'qwertyuiop' }
+        form = UserRegistrationForm(form_data)
+        self.assertFalse(form.is_valid())
+
+
+    def test_register_user_with_username_already_in_db_fails(self):
+
+        # Create a user with username bob
+        bob = User(username='bob', email='bob@bob.com')
+        bob.save()
+
+        # attempt to create another user with same username
+        form_data = { 'username' : 'bob' , 'email' : 'another_bob@bob.com', 'first_name' : 'bob', 'last_name' : 'whatever', 'password1' : 'qwertyuiop', 'password2' : 'qwertyuiop' }
+        form = UserRegistrationForm(form_data)
+        self.assertFalse(form.is_valid())
+
+
+    # TODO make this test pass!
+    def test_register_user_with_username_already_in_db_case_insensitive_fails(self):
+
+        # Create a user with username bob
+        bob = User(username='bob', email='bob@bob.com')
+        bob.save()
+
+        invalid_username = ['BOB', 'BOb', 'Bob', 'bOB', 'bOb', 'boB']
+
+        for invalid in invalid_username:
+            # attempt to create another user with same username
+            form_data = { 'username' : invalid , 'email' : 'another_bob@bob.com', 'first_name' : 'bob', 'last_name' : 'whatever', 'password1' : 'qwertyuiop', 'password2' : 'qwertyuiop' }
+            form = UserRegistrationForm(form_data)
+            self.assertFalse(form.is_valid())
+
+
+    # TODO make this test pass!
+    def test_register_user_with_email_already_in_db_case_insensitive_fails(self):
+
+        # Create a user with username bob
+        bob = User(username='bob', email='bob@bob.com')
+        bob.save()
+
+        invalid_email = ['BOB@bOb.com', 'BOb@bob.cOm', 'Bob@bob.coM', 'BOB@BOB.COM', 'bOb@bob.com', 'boB@bob.com']
+
+        for invalid in invalid_email:
+            # attempt to create another user with same username
+            form_data = { 'username' : invalid , 'email' : 'another_bob@bob.com', 'first_name' : 'bob', 'last_name' : 'whatever', 'password1' : 'qwertyuiop', 'password2' : 'qwertyuiop' }
+            form = UserRegistrationForm(form_data)
+            self.assertFalse(form.is_valid())
+
+
+
 
 class LoginFormTests(TestCase):
     pass
+
+    # todo username password ok
+    # todo username doesn't exist
+    # wrong password for valid username
+    # todo username not case sensitive - bob and BOB and Bob are the same
