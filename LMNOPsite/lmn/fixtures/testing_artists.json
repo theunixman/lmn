@@ -1,0 +1,11 @@
+[
+  {"model" : "lmn.artist", "pk" : 1 , "fields" :
+    { "name" : "Sharon Jones"}
+  },
+  {"model" : "lmn.artist", "pk" : 2 , "fields" :
+    { "name" : "Queen"}
+  },
+  {"model" : "lmn.artist", "pk" : 3 , "fields" :
+    { "name" : "Yes"}
+  }
+]

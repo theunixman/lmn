@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Venue, Artist, Note, Show
 from .forms import VenueSearchForm, NewNoteForm, ArtistSearchForm, UserRegistrationForm
@@ -19,18 +19,19 @@ def new_note(request, show_pk):
 
         form = NewNoteForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
+
             note = form.save(commit=False);
-            note.user = request.user
-            note.show = show
-            note.posted_date = timezone.now()
-            note.save()
-            return redirect('lmn:note_detail', note_pk=note.pk)
+            if note.title and note.text:  # If note has both title and text
+                note.user = request.user
+                note.show = show
+                note.posted_date = timezone.now()
+                note.save()
+                return redirect('lmn:note_detail', note_pk=note.pk)
 
     else :
         form = NewNoteForm()
 
-    return render(request, 'lmn/notes/new_note.html' , { 'form' : form , 'show':show})
+    return render(request, 'lmn/notes/new_note.html' , { 'form' : form , 'show':show })
 
 
 
@@ -50,5 +51,5 @@ def notes_for_show(request, show_pk):   # pk = show pk
 
 
 def note_detail(request, note_pk):
-    note = Note.objects.get(pk=note_pk)
+    note = get_object_or_404(Note, pk=note_pk)
     return render(request, 'lmn/notes/note_detail.html' , {'note' : note })

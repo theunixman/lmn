@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Venue, Artist, Note, Show
 from .forms import VenueSearchForm, NewNoteForm, ArtistSearchForm, UserRegistrationForm
@@ -36,5 +36,5 @@ def artists_at_venue(request, venue_pk):   # pk = venue_pk
 
 
 def venue_detail(request, venue_pk):
-    venue = Venue.objects.get(pk=venue_pk);
+    venue = get_object_or_404(Venue, pk=venue_pk);
     return render(request, 'lmn/venues/venue_detail.html' , {'venue' : venue})

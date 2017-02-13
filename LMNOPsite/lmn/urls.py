@@ -22,10 +22,9 @@ urlpatterns = [
     url(r'^notes/for_show/(?P<show_pk>\d+)/$', views_notes.notes_for_show, name='notes_for_show'),
     url(r'^notes/add/(?P<show_pk>\d+)/$', views_notes.new_note, name='new_note'),
 
-
     #Artist related
     url(r'^artists/list/$', views_artists.artist_list, name='artist_list'),
-    url(r'^artists/detail/(?P<artist_pk>\d+)/$', views_artists.artist_list, name='artist_list'),
+    url(r'^artists/detail/(?P<artist_pk>\d+)/$', views_artists.artist_detail, name='artist_detail'),
     url(r'^artists/venues_played/(?P<artist_pk>\d+)/$', views_artists.venues_for_artist, name='venues_for_artist'),
 
     # User related
