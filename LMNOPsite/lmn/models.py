@@ -26,7 +26,7 @@ class Artist(models.Model):
 
 ''' A venue, that hosts shows. '''
 class Venue(models.Model):
-    name = models.CharField(max_length=200, blank=False)
+    name = models.CharField(max_length=200, blank=False, unique=True)
     city = models.CharField(max_length=200, blank=False)
     state = models.CharField(max_length=2, blank=False)  # What about international?
 

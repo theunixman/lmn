@@ -80,4 +80,24 @@ To run tests  (some currently fail - see Issues)
 
 python manage.py test lmn.tests
 
-### Install selenium
+Or just some of the tests,
+python manage.py test lmn.tests.test_views
+python manage.py test lmn.tests.test_views.TestUserAuthentication
+python manage.py test lmn.tests.test_views.TestUserAuthentication.test_user_registration_logs_user_in
+
+
+
+### Functional Tests with selenium
+
+Install (upgrade to the latest version if you already have it) Firefox browser. It works best for automated functional testing with Selenium.
+
+geckodriver needs to be in path or you need to tell selenim where it is. Pick an approach: http://stackoverflow.com/questions/40208051/selenium-using-python-geckodriver-executable-needs-to-be-in-path
+
+
+### Test coverage
+
+From directory with manage.py in it,
+
+coverage run --source='.' manage.py test lmn.tests
+
+coverage report
