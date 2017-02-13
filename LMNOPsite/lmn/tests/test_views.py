@@ -5,7 +5,8 @@ from django.core.urlresolvers import reverse
 from ..models import Venue, Artist, Note, Show
 from django.contrib.auth.models import User
 
-import re
+import re, datetime
+from datetime import timezone
 
 
 class TestEmptyView(TestCase):
@@ -15,7 +16,7 @@ class TestEmptyView(TestCase):
 
 class TestArtistViews(TestCase):
 
-    fixtures = ['testing_artists']
+    fixtures = ['testing_artists', 'testing_venues', 'testing_shows']
 
     def test_all_artists_displays_all_alphabetically(self):
         response = self.client.get(reverse('lmn:artist_list'))
@@ -23,9 +24,8 @@ class TestArtistViews(TestCase):
         # .* matches 0 or more of any character. Test to see if
         # these names are present, in the right order
 
-        regex = '.*Queen.*Sharon Jones.*Yes.*'
+        regex = '.*ACDC.*REM.*Yes.*'
         response_text = str(response.content)
-        print(response.content)
 
         self.assertTrue(re.match(regex, response_text))
 
@@ -34,7 +34,7 @@ class TestArtistViews(TestCase):
 
 
     def test_artists_search_clear_link(self):
-        response = self.client.get( reverse('lmn:artist_list') , {'search_name' : 'Queen'} )
+        response = self.client.get( reverse('lmn:artist_list') , {'search_name' : 'ACDC'} )
 
         # There is a clear link, it's url is the main venue page
         all_artists_url = reverse('lmn:artist_list')
@@ -42,10 +42,10 @@ class TestArtistViews(TestCase):
 
 
     def test_artist_search_no_search_results(self):
-        response = self.client.get( reverse('lmn:artist_list') , {'search_name' : 'REM'} )
+        response = self.client.get( reverse('lmn:artist_list') , {'search_name' : 'Queen'} )
         self.assertNotContains(response, 'Yes')
-        self.assertNotContains(response, 'Sharon Jones')
-        self.assertNotContains(response, 'Queen')
+        self.assertNotContains(response, 'REM')
+        self.assertNotContains(response, 'ACDC')
         # Check the length of artists list is 0
         self.assertEqual(len(response.context['artists']), 0)
         self.assertTemplateUsed(response, 'lmn/artists/artist_list.html')
@@ -53,11 +53,11 @@ class TestArtistViews(TestCase):
 
     def test_artist_search_partial_match_search_results(self):
 
-        response = self.client.get(reverse('lmn:artist_list'), {'search_name' : 's'})
-        # Should be two responses, Yes and Sharon Jones
+        response = self.client.get(reverse('lmn:artist_list'), {'search_name' : 'e'})
+        # Should be two responses, Yes and REM
         self.assertContains(response, 'Yes')
-        self.assertContains(response, 'Sharon Jones')
-        self.assertNotContains(response, 'Queen')
+        self.assertContains(response, 'REM')
+        self.assertNotContains(response, 'ACDC')
         # Check the length of artists list is 2
         self.assertEqual(len(response.context['artists']), 2)
         self.assertTemplateUsed(response, 'lmn/artists/artist_list.html')
@@ -65,10 +65,10 @@ class TestArtistViews(TestCase):
 
     def test_artist_search_one_search_result(self):
 
-        response = self.client.get(reverse('lmn:artist_list'), {'search_name' : 'Queen'} )
-        self.assertNotContains(response, 'Sharon Jones')
+        response = self.client.get(reverse('lmn:artist_list'), {'search_name' : 'ACDC'} )
+        self.assertNotContains(response, 'REM')
         self.assertNotContains(response, 'Yes')
-        self.assertContains(response, 'Queen')
+        self.assertContains(response, 'ACDC')
         # Check the length of artists list is 1
         self.assertEqual(len(response.context['artists']), 1)
         self.assertTemplateUsed(response, 'lmn/artists/artist_list.html')
@@ -80,8 +80,8 @@ class TestArtistViews(TestCase):
         # kwargs to fill in parts of url. Not get or post params
 
         response = self.client.get(reverse('lmn:artist_detail', kwargs={'artist_pk' : 1} ))
-        self.assertContains(response, 'Sharon Jones')
-        self.assertEqual(response.context['artist'].name, 'Sharon Jones')
+        self.assertContains(response, 'REM')
+        self.assertEqual(response.context['artist'].name, 'REM')
         self.assertEqual(response.context['artist'].pk, 1)
 
         self.assertTemplateUsed(response, 'lmn/artists/artist_detail.html')
@@ -92,9 +92,46 @@ class TestArtistViews(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
-    def test_venues_for_artist(self):
-        pass
-        #TODO
+    def test_venues_played_at_most_recent_shows_first(self):
+        # Artist 1 (REM) has played at venue 2 (Turf Club) on two dates
+
+        url = reverse('lmn:venues_for_artist', kwargs={'artist_pk':1})
+        response = self.client.get(url)
+        shows = list(response.context['shows'].all())
+        print('SHOWS' , shows)
+        show1, show2 = shows[0], shows[1]
+        self.assertEqual(2, len(shows))
+
+        self.assertEqual(show1.artist.name, 'REM')
+        self.assertEqual(show1.venue.name, 'The Turf Club')
+
+        expected_date = datetime.datetime(2017, 2, 2, 0, 0, tzinfo=timezone.utc)
+        self.assertEqual(0, (show1.show_date - expected_date).total_seconds())
+
+        self.assertEqual(show2.artist.name, 'REM')
+        self.assertEqual(show2.venue.name, 'The Turf Club')
+        expected_date = datetime.datetime(2017, 1, 2, 0, 0, tzinfo=timezone.utc)
+        self.assertEqual(0, (show2.show_date - expected_date).total_seconds())
+
+        # Artist 2 (ACDC) has played at venue 1 (First Ave)
+
+        url = reverse('lmn:venues_for_artist', kwargs={'artist_pk':2})
+        response = self.client.get(url)
+        shows = list(response.context['shows'].all())
+        show1 = shows[0]
+        self.assertEqual(1, len(shows))
+
+        self.assertEqual(show1.artist.name, 'ACDC')
+        self.assertEqual(show1.venue.name, 'First Avenue')
+        expected_date = datetime.datetime(2017, 1, 21, 0, 0, tzinfo=timezone.utc)
+        self.assertEqual(0, (show1.show_date - expected_date).total_seconds())
+
+        # Artist 3 , no shows
+
+        url = reverse('lmn:venues_for_artist', kwargs={'artist_pk':3})
+        response = self.client.get(url)
+        shows = list(response.context['shows'].all())
+        self.assertEqual(0, len(shows))
 
 
 
@@ -110,7 +147,6 @@ class TestVenues(TestCase):
 
             regex = '.*First Avenue.*Target Center.*The Turf Club.*'
             response_text = str(response.content)
-            print(response.content)
 
             self.assertTrue(re.match(regex, response_text))
 
@@ -138,7 +174,7 @@ class TestVenues(TestCase):
 
         def test_venue_search_partial_match_search_results(self):
             response = self.client.get(reverse('lmn:venue_list'), {'search_name' : 'c'})
-            # Should be two responses, Yes and Sharon Jones
+            # Should be two responses, Yes and REM
             self.assertNotContains(response, 'First Avenue')
             self.assertContains(response, 'Turf Club')
             self.assertContains(response, 'Target Center')
@@ -176,9 +212,48 @@ class TestVenues(TestCase):
             self.assertEqual(response.status_code, 404)
 
 
-        def get_artists_for_venue(self):
-            pass
-            # TODO
+
+        def test_artists_played_at_venue_most_recent_first(self):
+            # Artist 1 (REM) has played at venue 2 (Turf Club) on two dates
+
+            url = reverse('lmn:artists_at_venue', kwargs={'venue_pk':2})
+            response = self.client.get(url)
+            shows = list(response.context['shows'].all())
+            print('SHOWS' , shows)
+            show1, show2 = shows[0], shows[1]
+            self.assertEqual(2, len(shows))
+
+            self.assertEqual(show1.artist.name, 'REM')
+            self.assertEqual(show1.venue.name, 'The Turf Club')
+
+            expected_date = datetime.datetime(2017, 2, 2, 0, 0, tzinfo=timezone.utc)
+            self.assertEqual(0, (show1.show_date - expected_date).total_seconds())
+
+            self.assertEqual(show2.artist.name, 'REM')
+            self.assertEqual(show2.venue.name, 'The Turf Club')
+            expected_date = datetime.datetime(2017, 1, 2, 0, 0, tzinfo=timezone.utc)
+            self.assertEqual(0, (show2.show_date - expected_date).total_seconds())
+
+            # Artist 2 (ACDC) has played at venue 1 (First Ave)
+
+            url = reverse('lmn:artists_at_venue', kwargs={'venue_pk':1})
+            response = self.client.get(url)
+            shows = list(response.context['shows'].all())
+            show1 = shows[0]
+            self.assertEqual(1, len(shows))
+
+            self.assertEqual(show1.artist.name, 'ACDC')
+            self.assertEqual(show1.venue.name, 'First Avenue')
+            expected_date = datetime.datetime(2017, 1, 21, 0, 0, tzinfo=timezone.utc)
+            self.assertEqual(0, (show1.show_date - expected_date).total_seconds())
+
+            # Venue 3 has not had any shows
+
+            url = reverse('lmn:artists_at_venue', kwargs={'venue_pk':3})
+            response = self.client.get(url)
+            shows = list(response.context['shows'].all())
+            self.assertEqual(0, len(shows))
+
 
 
 class TestShows(TestCase):

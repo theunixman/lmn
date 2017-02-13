@@ -1,9 +1,9 @@
 [
   {"model" : "lmn.artist", "pk" : 1 , "fields" :
-    { "name" : "Sharon Jones"}
+    { "name" : "REM"}
   },
   {"model" : "lmn.artist", "pk" : 2 , "fields" :
-    { "name" : "Queen"}
+    { "name" : "ACDC"}
   },
   {"model" : "lmn.artist", "pk" : 3 , "fields" :
     { "name" : "Yes"}
