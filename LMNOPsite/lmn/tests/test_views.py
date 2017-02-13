@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from ..models import Venue, Artist, Note, Show
 from django.contrib.auth.models import User
 
+import re
 
 
 class TestEmptyView(TestCase):
@@ -16,9 +17,28 @@ class TestArtistViews(TestCase):
 
     fixtures = ['testing_artists']
 
-    def test_with_artists_displays_all_alphabetically(self):
+    def test_all_artists_displays_all_alphabetically(self):
         response = self.client.get(reverse('lmn:artist_list'))
-        data = response
+
+        # .* matches 0 or more of any character. Test to see if
+        # these names are present, in the right order
+
+        regex = '.*Queen.*Sharon Jones.*Yes.*'
+        response_text = str(response.content)
+        print(response.content)
+
+        self.assertTrue(re.match(regex, response_text))
+
+        self.assertEqual(len(response.context['artists']), 3)
+        self.assertTemplateUsed(response, 'lmn/artists/artist_list.html')
+
+
+    def test_artists_search_clear_link(self):
+        response = self.client.get( reverse('lmn:artist_list') , {'search_name' : 'Queen'} )
+
+        # There is a clear link, it's url is the main venue page
+        all_artists_url = reverse('lmn:artist_list')
+        self.assertContains(response, all_artists_url)
 
 
     def test_artist_search_no_search_results(self):
@@ -72,15 +92,94 @@ class TestArtistViews(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
-
-
     def test_venues_for_artist(self):
         pass
+        #TODO
 
 
 
 class TestVenues(TestCase):
-    pass
+
+        fixtures = ['testing_venues']
+
+        def test_with_venues_displays_all_alphabetically(self):
+            response = self.client.get(reverse('lmn:venue_list'))
+
+            # .* matches 0 or more of any character. Test to see if
+            # these names are present, in the right order
+
+            regex = '.*First Avenue.*Target Center.*The Turf Club.*'
+            response_text = str(response.content)
+            print(response.content)
+
+            self.assertTrue(re.match(regex, response_text))
+
+            self.assertEqual(len(response.context['venues']), 3)
+            self.assertTemplateUsed(response, 'lmn/venues/venue_list.html')
+
+
+        def test_venue_search_clear_link(self):
+            response = self.client.get( reverse('lmn:venue_list') , {'search_name' : 'Fine Line'} )
+
+            # There is a clear link, it's url is the main venue page
+            all_venues_url = reverse('lmn:venue_list')
+            self.assertContains(response, all_venues_url)
+
+
+        def test_venue_search_no_search_results(self):
+            response = self.client.get( reverse('lmn:venue_list') , {'search_name' : 'Fine Line'} )
+            self.assertNotContains(response, 'First Avenue')
+            self.assertNotContains(response, 'Turf Club')
+            self.assertNotContains(response, 'Target Center')
+            # Check the length of venues list is 0
+            self.assertEqual(len(response.context['venues']), 0)
+            self.assertTemplateUsed(response, 'lmn/venues/venue_list.html')
+
+
+        def test_venue_search_partial_match_search_results(self):
+            response = self.client.get(reverse('lmn:venue_list'), {'search_name' : 'c'})
+            # Should be two responses, Yes and Sharon Jones
+            self.assertNotContains(response, 'First Avenue')
+            self.assertContains(response, 'Turf Club')
+            self.assertContains(response, 'Target Center')
+            # Check the length of venues list is 2
+            self.assertEqual(len(response.context['venues']), 2)
+            self.assertTemplateUsed(response, 'lmn/venues/venue_list.html')
+
+
+        def test_venue_search_one_search_result(self):
+
+            response = self.client.get(reverse('lmn:venue_list'), {'search_name' : 'Target'} )
+            self.assertNotContains(response, 'First Avenue')
+            self.assertNotContains(response, 'Turf Club')
+            self.assertContains(response, 'Target Center')
+            # Check the length of venues list is 1
+            self.assertEqual(len(response.context['venues']), 1)
+            self.assertTemplateUsed(response, 'lmn/venues/venue_list.html')
+
+
+        def test_venue_detail(self):
+
+            ''' venue 1 details displayed in correct template '''
+            # kwargs to fill in parts of url. Not get or post params
+
+            response = self.client.get(reverse('lmn:venue_detail', kwargs={'venue_pk' : 1} ))
+            self.assertContains(response, 'First Avenue')
+            self.assertEqual(response.context['venue'].name, 'First Avenue')
+            self.assertEqual(response.context['venue'].pk, 1)
+
+            self.assertTemplateUsed(response, 'lmn/venues/venue_detail.html')
+
+
+        def test_get_venue_that_does_not_exist_returns_404(self):
+            response = self.client.get(reverse('lmn:venue_detail', kwargs={'venue_pk' : 10} ))
+            self.assertEqual(response.status_code, 404)
+
+
+        def get_artists_for_venue(self):
+            pass
+            # TODO
+
 
 class TestShows(TestCase):
     pass

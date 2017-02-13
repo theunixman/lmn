@@ -17,7 +17,7 @@ def venue_list(request):
 
     if search_name:
         #search for this venue, display results
-        venues = Venue.objects.filter(name__contains=search_name).order_by('name')
+        venues = Venue.objects.filter(name__icontains=search_name).order_by('name')
     else :
         venues = Venue.objects.all().order_by('name')   # Todo paginate
 

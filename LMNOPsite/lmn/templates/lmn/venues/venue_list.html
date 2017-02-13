@@ -16,7 +16,7 @@
 
 
 {% if search_term %}
-  <h2>Venues matching {{ search_term }}  <a href="{% url 'lmn:venue_list' %}">clear</a></h2>
+  <h2>Venues matching {{ search_term }}  <a href="{% url 'lmn:venue_list' %}" id='clear_search'>clear</a></h2>
 {% else %}
   <h2>All venues</h2>
 {% endif %}

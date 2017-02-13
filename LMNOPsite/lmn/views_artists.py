@@ -24,7 +24,7 @@ def artist_list(request):
     form = ArtistSearchForm()
     search_name = request.GET.get('search_name')
     if search_name:
-        artists = Artist.objects.filter(name__contains=search_name).order_by('name')
+        artists = Artist.objects.filter(name__icontains=search_name).order_by('name')
     else:
         artists = Artist.objects.all().order_by('name')
 
