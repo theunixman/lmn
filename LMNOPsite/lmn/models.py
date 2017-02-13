@@ -11,11 +11,9 @@ import datetime
 User._meta.get_field('email')._unique = True
 
 #Require email, first name and last name
-User._meta.get_field('email').blank = False
-User._meta.get_field('last_name').blank = False
-User._meta.get_field('first_name').blank = False
-
-
+User._meta.get_field('email')._blank = False
+User._meta.get_field('last_name')._blank = False
+User._meta.get_field('first_name')._blank = False
 
 
 ''' A music artist '''

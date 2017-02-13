@@ -84,7 +84,7 @@ class RegistrationFormTests(TestCase):
     def test_register_user_with_email_already_in_db_fails(self):
 
         # Create a user with email bob@bob.com
-        bob = User(username='bob', email='bob@bob.com')
+        bob = User(username='bob', email='bob@bob.com', first_name='bob', last_name='bob')
         bob.save()
 
         # attempt to create another user with same email
@@ -132,7 +132,7 @@ class RegistrationFormTests(TestCase):
 
         for invalid in invalid_email:
             # attempt to create another user with same username
-            form_data = { 'username' : invalid , 'email' : 'another_bob@bob.com', 'first_name' : 'bob', 'last_name' : 'whatever', 'password1' : 'qwertyuiop', 'password2' : 'qwertyuiop' }
+            form_data = { 'username' : 'another_bob' , 'email' : invalid, 'first_name' : 'bob', 'last_name' : 'whatever', 'password1' : 'qwertyuiop', 'password2' : 'qwertyuiop' }
             form = UserRegistrationForm(form_data)
             self.assertFalse(form.is_valid())
 
@@ -146,3 +146,6 @@ class LoginFormTests(TestCase):
     # todo username doesn't exist
     # wrong password for valid username
     # todo username not case sensitive - bob and BOB and Bob are the same
+
+    def test_login_valid_username_password_ok(self):
+        bob = User()
