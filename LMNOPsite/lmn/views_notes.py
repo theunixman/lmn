@@ -13,7 +13,7 @@ from django.utils import timezone
 @login_required
 def new_note(request, show_pk):
 
-    show = Show.objects.get(pk=show_pk)
+    show = get_object_or_404(Show, pk=show_pk)
 
     if request.method == 'POST' :
 

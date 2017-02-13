@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 
 from django.core.urlresolvers import reverse
+from django.contrib import auth
 
 from ..models import Venue, Artist, Note, Show
 from django.contrib.auth.models import User
@@ -8,10 +9,22 @@ from django.contrib.auth.models import User
 import re, datetime
 from datetime import timezone
 
+# TODO verify correct templates are rendered.
 
-class TestEmptyView(TestCase):
+class TestEmptyViews(TestCase):
+
+    ''' main views - the ones in the navigation menu'''
     def test_with_no_artists_returns_empty_list(self):
-        pass
+        response = self.client.get(reverse('lmn:artist_list'))
+        self.assertFalse(response.context['artists'])  # An empty list is false
+
+    def test_with_no_venues_returns_empty_list(self):
+        response = self.client.get(reverse('lmn:venue_list'))
+        self.assertFalse(response.context['venues'])  # An empty list is false
+
+    def test_with_no_notes_returns_empty_list(self):
+        response = self.client.get(reverse('lmn:latest_notes'))
+        self.assertFalse(response.context['notes'])  # An empty list is false
 
 
 class TestArtistViews(TestCase):
@@ -28,9 +41,7 @@ class TestArtistViews(TestCase):
         response_text = str(response.content)
 
         self.assertTrue(re.match(regex, response_text))
-
         self.assertEqual(len(response.context['artists']), 3)
-        self.assertTemplateUsed(response, 'lmn/artists/artist_list.html')
 
 
     def test_artists_search_clear_link(self):
@@ -48,7 +59,6 @@ class TestArtistViews(TestCase):
         self.assertNotContains(response, 'ACDC')
         # Check the length of artists list is 0
         self.assertEqual(len(response.context['artists']), 0)
-        self.assertTemplateUsed(response, 'lmn/artists/artist_list.html')
 
 
     def test_artist_search_partial_match_search_results(self):
@@ -60,7 +70,6 @@ class TestArtistViews(TestCase):
         self.assertNotContains(response, 'ACDC')
         # Check the length of artists list is 2
         self.assertEqual(len(response.context['artists']), 2)
-        self.assertTemplateUsed(response, 'lmn/artists/artist_list.html')
 
 
     def test_artist_search_one_search_result(self):
@@ -71,7 +80,27 @@ class TestArtistViews(TestCase):
         self.assertContains(response, 'ACDC')
         # Check the length of artists list is 1
         self.assertEqual(len(response.context['artists']), 1)
+
+
+    def test_correct_template_used_for_artists(self):
+        # Show all
+        response = self.client.get(reverse('lmn:artist_list'))
         self.assertTemplateUsed(response, 'lmn/artists/artist_list.html')
+
+        # Search with matches
+        response = self.client.get(reverse('lmn:artist_list'), {'search_name' : 'ACDC'} )
+        self.assertTemplateUsed(response, 'lmn/artists/artist_list.html')
+        # Search no matches
+        response = self.client.get(reverse('lmn:artist_list'), {'search_name' : 'Non Existant Band'})
+        self.assertTemplateUsed(response, 'lmn/artists/artist_list.html')
+
+        # Artist detail
+        response = self.client.get(reverse('lmn:artist_detail', kwargs={'artist_pk':1}))
+        self.assertTemplateUsed(response, 'lmn/artists/artist_detail.html')
+
+        # Artist list for venue
+        response = self.client.get(reverse('lmn:artists_at_venue', kwargs={'venue_pk':1}))
+        self.assertTemplateUsed(response, 'lmn/artists/artist_list_for_venue.html')
 
 
     def test_artist_detail(self):
@@ -84,13 +113,10 @@ class TestArtistViews(TestCase):
         self.assertEqual(response.context['artist'].name, 'REM')
         self.assertEqual(response.context['artist'].pk, 1)
 
-        self.assertTemplateUsed(response, 'lmn/artists/artist_detail.html')
-
 
     def test_get_artist_that_does_not_exist_returns_404(self):
         response = self.client.get(reverse('lmn:artist_detail', kwargs={'artist_pk' : 10} ))
         self.assertEqual(response.status_code, 404)
-
 
 
     def test_venues_played_at_most_recent_shows_first(self):
@@ -214,7 +240,6 @@ class TestVenues(TestCase):
             self.assertEqual(response.status_code, 404)
 
 
-
         def test_artists_played_at_venue_most_recent_first(self):
             # Artist 1 (REM) has played at venue 2 (Turf Club) on two dates
 
@@ -256,33 +281,54 @@ class TestVenues(TestCase):
             self.assertEqual(0, len(shows))
 
 
+        def test_correct_template_used_for_venues(self):
+            # Show all
+            response = self.client.get(reverse('lmn:venue_list'))
+            self.assertTemplateUsed(response, 'lmn/venues/venue_list.html')
 
-class TestShows(TestCase):
-    pass
+            # Search with matches
+            response = self.client.get(reverse('lmn:venue_list'), {'search_name' : 'First'} )
+            self.assertTemplateUsed(response, 'lmn/venues/venue_list.html')
+            # Search no matches
+            response = self.client.get(reverse('lmn:venue_list'), {'search_name' : 'Non Existant Venue'})
+            self.assertTemplateUsed(response, 'lmn/venues/venue_list.html')
 
-class TestNoteList(TestCase):
+            # Venue detail
+            response = self.client.get(reverse('lmn:venue_detail', kwargs={'venue_pk':1}))
+            self.assertTemplateUsed(response, 'lmn/venues/venue_detail.html')
 
-    def test_notes_list(self):
-        pass
-
-    def test_notes_for_user(self):
-        pass
+            response = self.client.get(reverse('lmn:artists_at_venue', kwargs={'venue_pk':1}))
+            self.assertTemplateUsed(response, 'lmn/artists/artist_list_for_venue.html')
 
 
-class TestAddNotesRedirectToLogin(TestCase):
-    pass
+
+class TestAddNoteUnauthentictedUser(TestCase):
+
+    fixtures = [ 'testing_artists', 'testing_venues', 'testing_shows' ]  # Have to add artists and venues because of foreign key constrains in show
+
+    def test_add_note_unauthenticated_user_redirects_to_login(self):
+        response = self.client.get( '/notes/add/1/', follow=True)  # Use reverse() if you can, but not required.
+        # Should redirect to login; which will then redirect to the notes/add/1 page on success.
+        self.assertRedirects(response, '/accounts/login/?next=/notes/add/1/')
+
 
 class TestAddNotesWhenUserLoggedIn(TestCase):
     fixtures = ['testing_users', 'testing_artists', 'testing_shows', 'testing_venues', 'testing_notes']
-
-    # TODO add note for non-existent show is error
 
     def setUp(self):
         user = User.objects.first()
         self.client.force_login(user)
 
 
+    def test_save_note_for_non_existent_show_is_error(self):
+        new_note_url = reverse('lmn:new_note', kwargs={'show_pk':100})
+        response = self.client.post(new_note_url)
+        self.assertEqual(response.status_code, 404)
+
+
     def test_can_save_new_note_for_show_blank_data_is_error(self):
+
+        initial_note_count = Note.objects.count()
 
         new_note_url = reverse('lmn:new_note', kwargs={'show_pk':1})
 
@@ -300,23 +346,130 @@ class TestAddNotesWhenUserLoggedIn(TestCase):
         self.assertTemplateUsed('lmn/notes/new_note.html')
 
         # nothing added to database
-        self.assertEqual(Note.objects.count(), 2)   # 2 test notes provided in fixture, should still be 2
+        self.assertEqual(Note.objects.count(), initial_note_count)   # 2 test notes provided in fixture, should still be 2
 
 
+    def test_add_note_database_updated_correctly(self):
 
-    def test_redirect_to_note_detail_after_save(self):
+        initial_note_count = Note.objects.count()
 
         new_note_url = reverse('lmn:new_note', kwargs={'show_pk':1})
 
         response = self.client.post(new_note_url, {'text':'ok', 'title':'blah blah' }, follow=True)
-        self.assertRedirects(response, reverse('lmn:note_detail', kwargs={'note_pk':3}))
 
-        latest_note = Note.objects.filter(text='ok', title='blah blah').all()
-        self.assertEqual(len(latest_note), 1)
+        # Verify note is in database
+        new_note_query = Note.objects.filter(text='ok', title='blah blah')
+        self.assertEqual(new_note_query.count(), 1)
 
-        self.assertEqual(Note.objects.count(), 3)   # 2 test notes provided in fixture, should still be 2
+        # And one more note in DB than before
+        self.assertEqual(Note.objects.count(), initial_note_count + 1)
+
+        # Date correct?
+        now = datetime.datetime.today()
+        posted_date = new_note_query.first().posted_date
+        self.assertEqual(now.date(), posted_date.date())  # TODO check time too
+
+
+    def test_redirect_to_note_detail_after_save(self):
+
+        initial_note_count = Note.objects.count()
+
+        new_note_url = reverse('lmn:new_note', kwargs={'show_pk':1})
+        response = self.client.post(new_note_url, {'text':'ok', 'title':'blah blah' }, follow=True)
+        new_note = Note.objects.filter(text='ok', title='blah blah').first()
+
+        self.assertRedirects(response, reverse('lmn:note_detail', kwargs={'note_pk': new_note.pk }))
+
+
+class TestUserProfile(TestCase):
+    fixtures = [ 'testing_users', 'testing_artists', 'testing_venues', 'testing_shows', 'testing_notes' ]  # Have to add artists and venues because of foreign key constrains in show
+
+    # verify correct list of reviews for a user
+    def test_user_profile_show_list_of_their_notes(self):
+        # get user profile for user 2. Should have 2 reviews for show 1 and 2.
+        response = self.client.get(reverse('lmn:user_profile', kwargs={'user_pk':2}))
+        notes_expected = list(Note.objects.filter(user=2))
+        notes_provided = list(response.context['notes'])
+        self.assertTemplateUsed('lmn/users/user_profile.html')
+        self.assertEqual(notes_expected, notes_provided)
+
+        # test notes are in date order, most recent first.
+        # Note PK 3 should be first, then PK 2
+        first_note = response.context['notes'][0]
+        self.assertEqual(first_note.pk, 3)
+
+        second_note = response.context['notes'][1]
+        self.assertEqual(second_note.pk, 2)
+
+
+    def test_user_with_no_notes(self):
+        response = self.client.get(reverse('lmn:user_profile', kwargs={'user_pk':3}))
+        self.assertFalse(response.context['notes'])
+
+
+class TestNotes(TestCase):
+    fixtures = [ 'testing_users', 'testing_artists', 'testing_venues', 'testing_shows', 'testing_notes' ]  # Have to add artists and venues because of foreign key constrains in show
+
+    def test_latest_notes(self):
+        response = self.client.get(reverse('lmn:latest_notes'))
+        expected_notes = list(Note.objects.all())
+        # Should be note 3, then 2, then 1
+        context = response.context['notes']
+        first, second, third = context[0], context[1], context[2]
+        self.assertEqual(first.pk, 3)
+        self.assertEqual(second.pk, 2)
+        self.assertEqual(third.pk, 1)
+
+
+    def test_notes_for_show_view(self):
+        # Verify correct list of notes shown for a Show, most recent first
+        # Show 1 has 2 notes with PK = 2 (most recent) and PK = 1
+        response = self.client.get(reverse('lmn:notes_for_show', kwargs={'show_pk':1}))
+        context = response.context['notes']
+        first, second = context[0], context[1]
+        self.assertEqual(first.pk, 2)
+        self.assertEqual(second.pk, 1)
+
+
+    def test_correct_templates_uses_for_notes(self):
+        response = self.client.get(reverse('lmn:latest_notes'))
+        self.assertTemplateUsed(response, 'lmn/notes/note_list.html')
+
+        response = self.client.get(reverse('lmn:note_detail', kwargs={'note_pk':1}))
+        self.assertTemplateUsed(response, 'lmn/notes/note_detail.html')
+
+        response = self.client.get(reverse('lmn:notes_for_show', kwargs={'show_pk':1}))
+        self.assertTemplateUsed(response, 'lmn/notes/note_list.html')
+
+        # Log someone in
+        self.client.force_login(User.objects.first())
+        response = self.client.get(reverse('lmn:new_note', kwargs={'show_pk':1}))
+        self.assertTemplateUsed(response, 'lmn/notes/new_note.html')
 
 
 
 class TestUserAuthentication(TestCase):
-    pass
+
+    ''' Some aspects of registration (e.g. missing data, duplicate username) covered in test_forms '''
+    ''' Currently using much of Django's built-in login and registration system'''
+
+    def test_user_registration_logs_user_in(self):
+        response = self.client.post(reverse('register'), {'username':'sam12345', 'email':'sam@sam.com', 'password1':'qwertyuiop', 'password2':'qwertyuiop', 'first_name':'sam', 'last_name' : 'sam'}, follow=True)
+
+        # Assert user is logged in - one way to do it...
+        user = auth.get_user(self.client)
+        self.assertEqual(user.username, 'sam12345')
+
+        # This works too. Don't need both tests, added this one for reference.
+        # sam12345 = User.objects.filter(username='sam12345').first()
+        # auth_user_id = int(self.client.session['_auth_user_id'])
+        # self.assertEqual(auth_user_id, sam12345.pk)
+
+
+    def test_user_registration_redirects_to_correct_page(self):
+        # TODO If user is browsing site, then registers, once they have registered, they should
+        # be redirected to the last page they were at, not the homepage.
+        response = self.client.post(reverse('register'), {'username':'sam12345', 'email':'sam@sam.com', 'password1':'qwertyuiop', 'password2':'qwertyuiop', 'first_name':'sam', 'last_name' : 'sam'}, follow=True)
+
+        self.assertRedirects(response, reverse('lmn:homepage'))   # FIXME Fix code to redirect to last page user was on before registration.
+        self.assertContains(response, 'sam12345')  # Homepage has user's name on it

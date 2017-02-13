@@ -15,5 +15,14 @@
         "email" : "b@b.com",
         "password" : "qwertyuiop"
       }
+    },
+
+    {"model" : "auth.user", "pk" : 3 , "fields" :
+      { "username" : "me",
+        "first_name" : "me",
+        "last_name" : "mine",
+        "email" : "email@mine.com",
+        "password" : "qwertyuiop"
+      }
     }
 ]

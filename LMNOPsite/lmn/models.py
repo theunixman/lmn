@@ -56,5 +56,5 @@ class Note(models.Model):
         posted_date = datetime.datetime.today()
         self.save()
 
-    def __str__():
+    def __str__(self):
         return 'Note for user ID {} for show ID {} with title {} text {} posted on {}'.format(self.user, self.show, self.title, self.text, self.posted_date)
