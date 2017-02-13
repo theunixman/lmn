@@ -92,13 +92,15 @@ class TestArtistViews(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
+
     def test_venues_played_at_most_recent_shows_first(self):
+        ''' For each artist, display a list of venues they have played shows at '''
+
         # Artist 1 (REM) has played at venue 2 (Turf Club) on two dates
 
         url = reverse('lmn:venues_for_artist', kwargs={'artist_pk':1})
         response = self.client.get(url)
         shows = list(response.context['shows'].all())
-        print('SHOWS' , shows)
         show1, show2 = shows[0], shows[1]
         self.assertEqual(2, len(shows))
 
@@ -137,7 +139,7 @@ class TestArtistViews(TestCase):
 
 class TestVenues(TestCase):
 
-        fixtures = ['testing_venues']
+        fixtures = ['testing_venues', 'testing_artists', 'testing_shows']
 
         def test_with_venues_displays_all_alphabetically(self):
             response = self.client.get(reverse('lmn:venue_list'))
@@ -219,7 +221,6 @@ class TestVenues(TestCase):
             url = reverse('lmn:artists_at_venue', kwargs={'venue_pk':2})
             response = self.client.get(url)
             shows = list(response.context['shows'].all())
-            print('SHOWS' , shows)
             show1, show2 = shows[0], shows[1]
             self.assertEqual(2, len(shows))
 
