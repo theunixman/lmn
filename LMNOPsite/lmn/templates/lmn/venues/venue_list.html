@@ -16,9 +16,9 @@
 
 
 {% if search_term %}
-  <h2 id="title">Venues matching '{{ search_term }}'  <a href="{% url 'lmn:venue_list' %}" id='clear_search'>clear</a></h2>
+  <h2 id="venue_list_title">Venues matching '{{ search_term }}'  <a href="{% url 'lmn:venue_list' %}" id='clear_search'>clear</a></h2>
 {% else %}
-  <h2 id="title">All venues</h2>
+  <h2 id="venue_list_title">All venues</h2>
 {% endif %}
 
 <div>
@@ -28,7 +28,7 @@
 <div id="venue_{{ venue.pk }}">
   <P><a href="{% url 'lmn:venue_detail' venue_pk=venue.pk %}">{{ venue.name }}</a>
   {{ venue.city }}, {{ venue.state }}</p>
-  <P>See artists, notes, and add your own <a href='{% url "lmn:artists_at_venue" venue_pk=venue.pk %}'>{{ venue.name }} Notes</a>
+  <P>See artists, notes, and add your own <a href='{% url "lmn:artists_at_venue" venue_pk=venue.pk %}'>{{ venue.name }} notes</a>
 </p>
 </div>
 

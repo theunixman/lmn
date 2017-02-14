@@ -24,6 +24,14 @@
         "text" : "woo hoo!",
         "posted_date" : "2017-02-14"
       }
-    }
+    },
 
+    {"model" : "lmn.note", "pk" : 4 , "fields" :
+      { "show" : "4",
+        "user" : "3",
+        "title" : "mythical",
+        "text" : "boo",
+        "posted_date" : "2017-02-15"
+      }
+    }
 ]

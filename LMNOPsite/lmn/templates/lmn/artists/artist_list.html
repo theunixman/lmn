@@ -11,9 +11,9 @@
 
 
 {% if search_term %}
-  <h2 id='title'>Artists matching '{{ search_term }}' <a href="{% url 'lmn:artist_list' %}" id='clear_search'>(clear)</a></h2>
+  <h2 id='artist_list_title'>Artists matching '{{ search_term }}' <a href="{% url 'lmn:artist_list' %}" id='clear_search'>(clear)</a></h2>
 {% else %}
-  <h2 id='title'>All artists</h2>
+  <h2 id='artist_list_title'>All artists</h2>
 {% endif %}
 
 
