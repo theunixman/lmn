@@ -11,10 +11,9 @@ Text truncated to 200 characters. -->
 
 {% for note in notes %}
 
-<div class=note>
+<div id="note_{{ note.pk }}">
   <h3><a href="{% url 'lmn:note_detail' note_pk=note.pk %}">{{ note.title }}</a></h3>
   <p>{{ note.text|truncatechars:300}}
-
 </div>
 
 {% empty %}
