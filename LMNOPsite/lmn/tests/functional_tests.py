@@ -4,7 +4,10 @@ from selenium.webdriver.common.keys import Keys
 
 import re, time
 
-### TODO break into smaller tests?
+from django.contrib.auth.models import User
+
+
+### TODO break into smaller tests; helper methods
 
 
 class HomePageTest(LiveServerTestCase):
@@ -339,6 +342,8 @@ class BrowseVenues(LiveServerTestCase):
         add_notes = self.browser.find_element_by_tag_name('input')
         self.assertEqual(add_notes.get_attribute('value'), 'Add your own notes')
 
+        # Adding a note requires authentication - will do this in another test.
+
         # Test artist with no shows
         self.browser.back() # To list of shows
         self.browser.back() # to list of artists
@@ -348,9 +353,6 @@ class BrowseVenues(LiveServerTestCase):
         no_shows_artists.click()
         no_show_para = document.find_element_by_id('no_results')
         assert 'no records of venues' in no_show_para.text
-
-        # Adding a note requires authentication - will do this in another test.
-
 
 
     def test_searching_venues(self):
@@ -439,38 +441,117 @@ class BrowseVenues(LiveServerTestCase):
 
 
 
-class Notes(LiveServerTestCase):
+class TestNotes(LiveServerTestCase):
 
-    def test_add_note_for_show(self):
-        pass
-        # Start at list of shows
+    fixtures = ['fn_testing_users', 'fn_testing_artists', 'fn_testing_venues', 'fn_testing_shows', 'fn_testing_notes']
 
-        # click on 'see notes' link
+    def setUp(self):
+        self.browser = webdriver.Firefox()
 
-        # verify list of notes displayed
+    def tearDown(self):
+        self.browser.quit()
 
+
+    def test_add_note_for_show_when_logged_in(self):
+
+        self.browser.implicitly_wait(3)
+
+        # Log in
+        self.browser.get(self.live_server_url + '/accounts/login')
+        username = self.browser.find_element_by_id('id_username')
+        password = self.browser.find_element_by_id('id_password')
+        username.send_keys('bob')
+        password.send_keys('qwertyuiop')
+        username.submit()
+
+        time.sleep(1)
+
+        # Get show page, the list of notes for an example show
+        self.browser.get(self.live_server_url + '/notes/for_show/2')
+
+        # Find and click on 'add note' button
+        add_note = self.browser.find_element_by_id('add_note')
+        add_note.submit()
+
+        # Should be on add note page
+
+        # Find form elements
+        title_area = self.browser.find_element_by_id('id_title')
+        text_area = self.browser.find_element_by_id('id_text')
+
+        # Check URL (after finding elements, so will know page has loaded)
+        assert 'notes/add/2' in self.browser.current_url
+
+        title_area.send_keys('Fab')
+        text_area.send_keys('Best ever')
+        title_area.submit()  # Convenience method for submitting form with this element in
+
+        # Should now be on note detail page. Title will be 'band at venue by user'
+
+        title = self.browser.find_element_by_id('note_page_title')
+        assert 'REM at The Turf Club by bob' in title.text
+
+        note_title = self.browser.find_element_by_id('note_title')
+        assert 'Fab' in note_title.text
+
+        note_text = self.browser.find_element_by_id('note_text')
+        assert 'Best ever' in note_text.text
+
+        assert '/notes/detail/4' in self.browser.current_url
         # verify add own note is displayed
 
 
     def test_add_note_redirect_to_login_and_back_to_add_note(self):
-        pass
-        # start at list of notes
 
-        # click add note
+        # Get show page, the list of notes for an example show
+        self.browser.get(self.live_server_url + '/notes/for_show/2')
 
-        # verify redirect to login
+        # Find and click on 'add note' button
+        add_note = self.browser.find_element_by_id('add_note')
+        add_note.submit()
 
-        # login
+        # Verify at login
+        self.browser.get(self.live_server_url + '/accounts/login')
+        username = self.browser.find_element_by_id('id_username')
+        password = self.browser.find_element_by_id('id_password')
+        username.send_keys('alice')
+        password.send_keys('qwertyuiop')
 
-        # verify redirect to add note form
+        # Click login button
+        self.browser.find_element_by_tag_name('button').submit()
 
-        # enter note text and title
+        # Assert at add note form
 
-        # verify redirect to note detail
+        # Find form elements
+        title_area = self.browser.find_element_by_id('id_title')
+        text_area = self.browser.find_element_by_id('id_text')
+
+        # Check URL (after finding elements, so will know page has loaded)
+        assert 'notes/add/2' in self.browser.current_url
+
+        title_area.send_keys('Fab')
+        text_area.send_keys('Best ever')
+        title_area.submit()  # Convenience method for submitting form with this element in
+
+        # Should now be on note detail page. Title will be 'band at venue by user'
+
+        title = self.browser.find_element_by_id('note_page_title')
+        assert 'REM at The Turf Club by alice' in title.text
+
+        note_title = self.browser.find_element_by_id('note_title')
+        assert 'Fab' in note_title.text
+
+        note_text = self.browser.find_element_by_id('note_text')
+        assert 'Best ever' in note_text.text
+
+        assert '/notes/detail/4' in self.browser.current_url
+
 
 
     def test_add_note_redirect_to_login_and_register_and_back_to_add_note(self):
         pass
+        #TODO!
+
         # start at list of notes
 
         # click add note
@@ -490,16 +571,64 @@ class Notes(LiveServerTestCase):
 
 class TestRegistration(LiveServerTestCase):
 
-    def test_login_from_home_page(self):
+    fixtures = [ 'fn_testing_users' ]
+
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(3)
+
+    def tearDown(self):
+        self.browser.quit()
+
+
+    def test_login_valid_password(self):
+
+        # Log in
+        self.browser.get(self.live_server_url + '/accounts/login')
+        username = self.browser.find_element_by_id('id_username')
+        password = self.browser.find_element_by_id('id_password')
+        username.send_keys('alice')
+        password.send_keys('qwertyuiop')
+
+        # Click login button
+        self.browser.find_element_by_tag_name('button').submit()
+
+        # Verify page contains 'you are logged in, alice'
+        print(self.browser.find_element_by_tag_name('body').text)
+        welcome = self.browser.find_element_by_id('welcome_user_msg')
+        assert 'You are logged in, alice.' in welcome.text
+
+
+    def test_login_invalid_password(self):
+
+        # Log in
+        self.browser.get(self.live_server_url + '/accounts/login')
+        username = self.browser.find_element_by_id('id_username')
+        password = self.browser.find_element_by_id('id_password')
+        username.send_keys('none')
+        password.send_keys('wrong')
+
+        # Click login button
+        self.browser.find_element_by_tag_name('button').submit()
+
+        # Verify page still says 'login or sign up'
+        login_invite = self.browser.find_element_by_id('login_or_sign_up')
+        assert 'Login or sign up' in login_invite.text
+        # Verify page does NOT display 'you are logged in, none'
+        assert 'You are logged in, none.' not in self.browser.page_source
+        # Assert error message
+
+        print(self.browser.page_source)
+        assert 'Please enter a correct username and password' in self.browser.page_source
+
+
+    def test_register(self):
         pass
-
-    def test_click_login_then_register_from_home_page(self):
-        pass
+        # TODO
 
 
-class UserProfile(LiveServerTestCase):
+class TestProfilePage(LiveServerTestCase):
 
-    def test_notes_shown_on_profile_page(self):
-        # todo notes have link to the user
-        # notes have link to show
-        pass
+    pass
+
+    # TODO

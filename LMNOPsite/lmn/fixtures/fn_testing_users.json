@@ -4,7 +4,7 @@
         "first_name" : "alice",
         "last_name" : "last",
         "email" : "a@a.com",
-        "password" : "qwertyuiop"
+        "password" : "pbkdf2_sha256$30000$kQdWPwdzZfE3$IXwsyRPDGxrbRp7tb2wdRHnyDT0eTcZG2XWPnAbQcS4="
       }
     },
 
@@ -13,7 +13,7 @@
         "first_name" : "bob",
         "last_name" : "last",
         "email" : "b@b.com",
-        "password" : "qwertyuiop"
+        "password" : "pbkdf2_sha256$30000$kQdWPwdzZfE3$IXwsyRPDGxrbRp7tb2wdRHnyDT0eTcZG2XWPnAbQcS4="
       }
     },
 
@@ -22,7 +22,7 @@
         "first_name" : "me",
         "last_name" : "mine",
         "email" : "email@mine.com",
-        "password" : "qwertyuiop"
+        "password" : "pbkdf2_sha256$30000$kQdWPwdzZfE3$IXwsyRPDGxrbRp7tb2wdRHnyDT0eTcZG2XWPnAbQcS4="
       }
     }
 ]

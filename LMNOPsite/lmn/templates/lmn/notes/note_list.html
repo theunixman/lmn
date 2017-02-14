@@ -31,7 +31,7 @@ display button to add new note for that show. -->
 {% if show %}
 
 <form action="{% url 'lmn:new_note' show_pk=show.pk %}">
-  <input type='submit' value='Add your own notes'>
+  <input id="add_note" type='submit' value='Add your own notes'>
 </form>
 
 {% endif %}
