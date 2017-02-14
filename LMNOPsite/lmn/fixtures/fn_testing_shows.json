@@ -13,7 +13,7 @@
   },
   {"model" : "lmn.show", "pk" : 3 , "fields" :
     { "show_date" : "2017-02-02",
-      "artist" : 3,
+      "artist" : 2,
       "venue" : 2
     }
   },
