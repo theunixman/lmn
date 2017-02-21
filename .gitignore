@@ -7,3 +7,4 @@ venv
 *.pyc
 geckodriver.log
 executables
+LMNOPsite/geckodriver.log
