@@ -15,20 +15,27 @@ Start postgres running
 
 start postgres shell with `psql`
 
-Create a user called lmnop
+And create a user called lmnop
 
-`create user lmnop with password 'password_here'; `
+```
+create user lmnop with password 'password_here'; 
+```
 
 create a database lmnop
 
-`create database owner lmnop;`
+```
+create database owner lmnop;
+```
 
 Various postgres shell commands 
 connect to lmnop database 
 
-`\c lmnop`
+```
+\c lmnop
+```
 
 `\dt`    shows tables
+
 `\d table_name`   shows info (and constraints) for a table
 other sql as expected
 
