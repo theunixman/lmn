@@ -8,42 +8,44 @@ https://github.com/DjangoGirls/tutorial-extensions/blob/master/optional_postgres
 
 Set admin password, remember it.
 
-start postgres shell
+Start postgres running
 
-- Create a user called lmnop
+`su postgres ` if on a mac/linux
+`pg_ctl start`  enter username and password
 
-create user lmnop;
+start postgres shell with `psql`
 
-- set lmnop user password
+Create a user called lmnop
 
-alter user lmnop with password 'password_here';
+`create user lmnop with password 'password_here'; `
 
-- create a database lmnop
+create a database lmnop
 
-create database owner lmnop;
+`create database owner lmnop;`
 
-- connect to lmnop
+Various postgres shell commands 
+connect to lmnop database 
 
-\c lmnop
+`\c lmnop`
 
-\dt    shows tables
-\d table_name   shows info (and constraints) for a table
+`\dt`    shows tables
+`\d table_name`   shows info (and constraints) for a table
 other sql as expected
+
+postgres shell command cheatsheet - https://gist.github.com/Kartones/dd3ff5ec5ea238d4c546
 
 set environment variable called
 POSTGRES_LMNOP_USER_PASSWORD
 with a value of the lmnop user's password
 
 
-postgres shell command cheatsheet - https://gist.github.com/Kartones/dd3ff5ec5ea238d4c546
+(Mac users may need to run these commands; these one time 
 
-(Mac users:
+`sudo ln -s /Library/PosgreSQL/9.5/lib/libssl.1.0.0.dylib /usr/local/lib
+sudo ln -s /Library/PosgreSQL/9.5/lib/libcrypto.1.0.0.dylib /usr/local/lib`
 
-  sudo ln -s /Library/PosgreSQL/9.5/lib/libssl.1.0.0.dylib /usr/local/lib
-  sudo ln -s /Library/PosgreSQL/9.5/lib/libcrypto.1.0.0.dylib /usr/local/lib
-
-  export DYLD_FALLBACK_LIBRARY_PATH=/Library/PostgreSQL/9.5/lib:$DYLD_LIBRARY_PATH
-
+And this when you start a new shell; or set it permanently in .bash_profile 
+`export DYLD_FALLBACK_LIBRARY_PATH=/Library/PostgreSQL/9.5/lib:$DYLD_LIBRARY_PATH`
 )
 
 ###To install
