@@ -91,8 +91,13 @@ python manage.py test lmn.tests.test_views.TestUserAuthentication.test_user_regi
 
 Install (upgrade to the latest version if you already have it) Firefox browser. It works best for automated functional testing with Selenium.
 
-geckodriver needs to be in path or you need to tell selenim where it is. Pick an approach: http://stackoverflow.com/questions/40208051/selenium-using-python-geckodriver-executable-needs-to-be-in-path
+geckodriver needs to be in path or you need to tell Selenim where it is. Pick an approach: http://stackoverflow.com/questions/40208051/selenium-using-python-geckodriver-executable-needs-to-be-in-path
 
+python manage.py runserver
+
+```
+python manage.py test lmn.tests.functional_tests
+```
 
 ### Test coverage
 

@@ -7,7 +7,7 @@ import re, time
 from django.contrib.auth.models import User
 
 
-### TODO break into smaller tests; helper methods
+### TODO break into smaller tests; helper methods?
 
 
 class HomePageTest(LiveServerTestCase):
@@ -27,6 +27,7 @@ class BrowseArtists(LiveServerTestCase):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
 
+
     def tearDown(self):
         self.browser.quit()
 
@@ -36,8 +37,8 @@ class BrowseArtists(LiveServerTestCase):
         # Start on home page
         self.browser.get(self.live_server_url)
 
-        # When searching for elements, wait 3 seconds for element to appear of page. Needed
-        # because page load time is slower than this script's execution time.
+        # When searching for elements, wait 3 seconds for element to appear on page.
+        # Needed because page load time is slower than this script's execution time.
         self.browser.implicitly_wait(3)
 
         # Find and click on artists link
@@ -221,6 +222,7 @@ class BrowseArtists(LiveServerTestCase):
         assert 'ACDC' in self.browser.page_source
 
 
+
 class BrowseVenues(LiveServerTestCase):
 
     fixtures = ['fn_testing_users', 'fn_testing_artists', 'fn_testing_venues', 'fn_testing_shows', 'fn_testing_notes']
@@ -266,7 +268,7 @@ class BrowseVenues(LiveServerTestCase):
         # Get a link to one of the venues
         fa = self.browser.find_element_by_link_text('First Avenue')
 
-        # click this link
+        # click the link to First Avenue
         fa.click()
 
         # Assert that venue's info is shown on new page

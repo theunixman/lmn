@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from lmn.forms import NewNoteForm, UserRegistrationForm
 import string
 
-# Test forms don't accept invalid data
+# Test that forms are validating correctly, and don't accept invalid data
 
 class NewNoteFormTests(TestCase):
 
@@ -142,10 +142,12 @@ class RegistrationFormTests(TestCase):
 class LoginFormTests(TestCase):
     pass
 
-    # todo username password ok
-    # todo username doesn't exist
-    # wrong password for valid username
-    # todo username not case sensitive - bob and BOB and Bob are the same
+    # TODO username password ok
+    # TODO username doesn't exist
+    # TODO wrong password for valid username
+    # TODO username not case sensitive - bob and BOB and Bob are the same
+    # Much of this is testing Django's built-in code - so suggest focusing testing
+    # on new features that you add .
 
     def test_login_valid_username_password_ok(self):
         bob = User()

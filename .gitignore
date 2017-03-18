@@ -3,8 +3,11 @@ venv/
 __pycache__
 LMNOPsite/lmn/__pycache__/
 *.sqlite3
-venv
-*.pyc
-geckodriver.log
+
+
+# geckdriver executable file and logs
+
 executables
+geckodriver
+geckodriver.log
 LMNOPsite/geckodriver.log
