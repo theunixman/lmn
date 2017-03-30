@@ -2,6 +2,7 @@
 import os
 import sys
 
+# Comment to see if I can push to github.
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "LMNOPsite.settings")
 
