@@ -15,7 +15,7 @@ def new_note(request, show_pk):
 
     show = get_object_or_404(Show, pk=show_pk)
 
-    if request.method == 'POST' :
+    if request.method == 'POST':
 
         form = NewNoteForm(request.POST)
         if form.is_valid():
@@ -32,6 +32,11 @@ def new_note(request, show_pk):
         form = NewNoteForm()
 
     return render(request, 'lmn/notes/new_note.html' , { 'form' : form , 'show':show })
+
+# user edit notes
+@login_required
+def edit_notes(request, pk):
+    notes = get_object_or_404(Note, pk=pk)
 
 
 

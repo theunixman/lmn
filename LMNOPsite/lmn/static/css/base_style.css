@@ -1,7 +1,14 @@
-body {
-  font-family: monospace;
-}
+@import url(https://fonts.googleapis.com/css?family=Pacifico);
+@import url(https://fonts.google.com/specimen/Open+Sans);
 
+body {
+ font-family:'Pacifico';
+}
+h1 {
+  font-family: 'Pacifico';
+}
+.btn{min-width:250px;
+  background: #000;}
 #welcome_user_msg, #login_or_sign_up {
   position: absolute;
   right: 0px;
@@ -16,3 +23,4 @@ body {
 #login_form.th, #registration_form.th {
   text-align: right;
 }
+
