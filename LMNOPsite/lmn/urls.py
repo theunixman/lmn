@@ -30,6 +30,10 @@ urlpatterns = [
     url(r'^user/profile/(?P<user_pk>\d+)/$', views_users.user_profile, name='user_profile'),
     url(r'^user/profile/$', views_users.my_user_profile, name='my_user_profile'),
 
+    # Database Entry related
+    #url(r'^venues/list/$', views_venues.venue_list, name='venue_list'),
+
+
     # Login/logout/signup views are in the app-level urls.py
 
 ]
