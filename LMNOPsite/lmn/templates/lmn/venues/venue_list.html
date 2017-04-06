@@ -7,10 +7,11 @@
 <P>Venue Search</P>
 
 <!-- The form fields are built from the definition in forms.py -->
-<form action="{% url 'lmn:venue_list' %}">
+<form action="{% url 'lmn:venue_list' %}" class="navbar-form navbar-left">
   {{ form }}
-  <input type='submit' value='Search'/>
+  <input type='submit' class="form-control" placeholder="Search..." value='Search'/>
 </form>
+  <br><br>
 </div>
 
 

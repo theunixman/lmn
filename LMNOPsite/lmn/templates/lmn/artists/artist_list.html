@@ -4,10 +4,10 @@
 <h2>Artist List</h2>
 
 <P>Artist Search</p>
-  <form action="{% url 'lmn:artist_list' %}">
+  <form action="{% url 'lmn:artist_list' %}" class="navbar-form navbar-left">
     {{ form }}
-    <input type='submit' value='Search'>
-  </form>
+    <input type='submit' value='Search', class="form-control" />
+  </form><br><br>
 
 
 {% if search_term %}
