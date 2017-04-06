@@ -1,5 +1,5 @@
 from django import forms
-from .models import Note
+from .models import Note, UserProfile
 import datetime
 
 from django.contrib.auth.forms import UserCreationForm
