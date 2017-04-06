@@ -8,7 +8,11 @@ Includes list of user's notes with title and preview of text.
 Text truncated to 200 characters. -->
 
 <h2 id='username_notes'>{{ user.username }}'s notes</h2>
-
+<p>Member since {{userProfile.joined_date}}</p>
+{% if user.is_authenticated %}
+<a class="btn btn-default" href="{% url 'lmn:my_user_profile' user_pk=user.pk %}">Edit</a>
+{%endif%}
+<p>About {{userProfile.about}}<p>
 {% for note in notes %}
 
 <div class='note' id="note_{{ note.pk }}">

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-import datetime
+from datetime import datetime
+from django.utils import timezone
 
 # Every model gets a primary key field by default.
 
@@ -14,6 +15,14 @@ User._meta.get_field('email')._unique = True
 User._meta.get_field('email')._blank = False
 User._meta.get_field('last_name')._blank = False
 User._meta.get_field('first_name')._blank = False
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    about = models.CharField(max_length=500, blank = True)
+    joined_date = models.DateTimeField(blank = True)
+    def publish(self):
+        joined_date = datetime.datetime.today()
+        self.save()
 
 
 ''' A music artist '''

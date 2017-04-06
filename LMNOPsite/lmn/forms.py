@@ -1,5 +1,6 @@
 from django import forms
 from .models import Note
+import datetime
 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -20,6 +21,11 @@ class NewNoteForm(forms.ModelForm):
         fields = ('title', 'text')
 
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('user','about','joined_date')
+
 class UserRegistrationForm(UserCreationForm):
 
     class Meta:
@@ -29,7 +35,8 @@ class UserRegistrationForm(UserCreationForm):
 
     def clean_username(self):
 
-        username = self.cleaned_data['username']
+        usernameIn = self.cleaned_data['username']
+        username = usernameIn.lower()
 
         if not username:
             raise ValidationError('Please enter a username')
@@ -78,3 +85,8 @@ class UserRegistrationForm(UserCreationForm):
             user.save()
 
         return user
+
+class UserProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('about',)
