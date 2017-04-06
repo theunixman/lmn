@@ -1,0 +1,12 @@
+{% extends 'lmn/base.html' %}
+{% block content %}
+
+<h2>Search for Artist</h2>
+
+<P>Artist Search</p>
+  <form action="{% url 'lmn:search_for_artist' %}">
+    {{ form }}
+    <input type='submit' value='Search'>
+  </form>
+
+{% endblock %}
