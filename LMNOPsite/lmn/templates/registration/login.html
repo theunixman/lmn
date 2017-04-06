@@ -1,7 +1,9 @@
 {% extends 'lmn/base.html' %}
 
 {% block content %}
-
+{% if message %}
+  <P>{{ message }}</p>
+{% endif %}
   <h2>Log in</h2>
 
   <form method='POST' action="">{% csrf_token %}
