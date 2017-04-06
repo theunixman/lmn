@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from . import views, views_artists, views_venues, views_notes, views_users
+from . import views, views_artists, views_venues, views_notes, views_users, views_search
 
 from django.contrib.auth import views as auth_views
 
@@ -29,6 +29,11 @@ urlpatterns = [
     # User related
     url(r'^user/profile/(?P<user_pk>\d+)/$', views_users.user_profile, name='user_profile'),
     url(r'^user/profiledetail/(?P<user_pk>\d+)/$', views_users.my_user_profile, name='my_user_profile'),
+
+    # Database Entry related
+
+    url(r'^search/$', views_search.search_for_artist, name='search_for_artist'),
+
 
     # Login/logout/signup views are in the app-level urls.py
 
