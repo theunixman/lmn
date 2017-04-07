@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
-from .models import Venue, Artist, Note, Show
-from .forms import VenueSearchForm, NewNoteForm, ArtistSearchForm, UserRegistrationForm
+from .models import Venue, Artist, Note, Show, User, UserProfile
+from .forms import VenueSearchForm, NewNoteForm, ArtistSearchForm, UserRegistrationForm, UserProfileEditForm
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -15,12 +15,12 @@ def user_profile(request, user_pk):
     user = User.objects.get(pk=user_pk)
     userP= UserProfile.objects.get(user = user)
     usernotes = Note.objects.filter(user=user.pk).order_by('posted_date').reverse()
-    return render(request, 'lmn/users/user_profile.html', {'user' : user , 'notes' : usernotes })
+    return render(request, 'lmn/users/user_profile.html', {'user' : user , 'userProfile': userP, 'notes' : usernotes })
 
 
 
 @login_required
-def my_user_profile(request):
+def my_user_profile(request, user_pk):
     user = get_object_or_404(User, pk=user_pk)
     userP= UserProfile.objects.get(user = user)
     usernotes = Note.objects.filter(user=user.pk).order_by('posted_date').reverse()

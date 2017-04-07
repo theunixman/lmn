@@ -81,7 +81,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'lmnop',
         'USER' : 'lmnop',
-        'PASSWORD' : os.environ['POSTGRES_LMNOP_USER_PASSWORD'],
+        #TODO
+        'PASSWORD' : 'lmnop',
+        #'PASSWORD' : os.environ['POSTGRES_LMNOP_USER_PASSWORD'],
         'HOST' : 'localhost',
         'PORT' : '',
     }
