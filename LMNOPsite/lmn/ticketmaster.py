@@ -14,14 +14,14 @@ import json
 
 
 # This is a test file for filtering out show data from Ticketmaster.
-base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&stateCode=MN'
+base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&keyword={}&stateCode=MN'
 
 
-def get_dates_for_artist():
+def get_dates_for_artist(band):
 
     key = 'xqbpUW8lmN8nnoX3UHO7suHosVMf8oBF'
 
-    url = base_url.format(key)
+    url = base_url.format(band,key)
 
     response = requests.get(url)
 
