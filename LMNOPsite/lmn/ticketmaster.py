@@ -15,11 +15,10 @@ import json
 
 # This is a test file for filtering out show data from Ticketmaster.
 #base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&keyword={}&stateCode=MN'
-base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&stateCode=MN'
 
 def get_all_current_venues():
 
-    base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&stateCode=MN'
+    base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&size=500&stateCode=MN'
 
     key = 'xqbpUW8lmN8nnoX3UHO7suHosVMf8oBF'
 
