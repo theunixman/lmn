@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
+from .ticketmaster import get_dates_for_artist, get_all_current_venues
 
 
 def search_for_artist(request):
@@ -18,5 +19,9 @@ def search_for_artist(request):
 
     #get_dates_for_artist() # This is a test for the ticketmaster, it doesn't mean anything yet and will eventually be moved.
 
+
+    get_all_current_venues() # This returns a dictionary of all current venue events on ticketmaster for MN.
+
+    #get_dates_for_artist()
 
     return render(request, 'lmn/database/data_entry.html', {'form':form})

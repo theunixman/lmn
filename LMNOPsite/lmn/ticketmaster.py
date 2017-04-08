@@ -14,41 +14,89 @@ import json
 
 
 # This is a test file for filtering out show data from Ticketmaster.
-base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&keyword={}&stateCode=MN'
+
+#base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&keyword={}&stateCode=MN'
 
 
-def get_dates_for_artist(band):
+def get_all_current_venues():
+
+    base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&size=500&stateCode=MN'
 
     key = 'xqbpUW8lmN8nnoX3UHO7suHosVMf8oBF'
 
-    url = base_url.format(band,key)
+    url = base_url.format(key)
 
     response = requests.get(url)
 
     tm_json = response.json()
 
-    info_list = []
+    venue_list = dict()
 
     try:
 
-        for event in tm_json["_embedded"]['events']["_embedded"]['venues']:
+        artist = tm_json["_embedded"]['events']
+        print(type(artist))
 
-            print(event)
+        for entry in artist:
+            for place in entry["_embedded"]['venues']:
+
+                location = place['name']
+                city = place['city']['name']
+
+                if location not in venue_list:
+
+                    venue_list[location] = city
 
 
-        artist = tm_json["_embedded"]['events'][0]
-        print(artist['url']) # ticket infor url
-        venue = artist["_embedded"]['venues'][0] # Gets venue
-        print(venue['name'])
-        info_list.append(artist['url'])
-        info_list.append(venue['name'])
 
-        print(info_list)
-
-        return info_list
+        print(venue_list)
+        print(type(venue_list))
 
 
     except Exception as e:
 
+        print('problem')
 
-        return info_list
+
+
+def get_dates_for_artist():
+
+    #base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&keyword={}&stateCode=MN'
+
+    key = 'xqbpUW8lmN8nnoX3UHO7suHosVMf8oBF'
+
+    url = base_url.format(key)
+
+    response = requests.get(url)
+
+    tm_json = response.json()
+
+    venue_list = dict()
+    city_list = []
+
+
+    try:
+
+        artist = tm_json["_embedded"]['events']
+        print(type(artist))
+
+        for entry in artist:
+            for place in entry["_embedded"]['venues']:
+
+                location = place['name']
+                city = place['city']['name']
+
+                if location not in venue_list:
+
+                    venue_list[location] = city
+
+
+
+        print(venue_list)
+        print(type(venue_list))
+
+
+
+    except Exception as e:
+
+        print('problem')
