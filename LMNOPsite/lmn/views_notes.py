@@ -37,6 +37,15 @@ def new_note(request, show_pk):
 @login_required
 def edit_notes(request, pk):
     notes = get_object_or_404(Note, pk=pk)
+    form = NewNoteForm(request.POST or None, instance=notes)
+    if form.is_valid():
+        notes = form.save(commit=False)
+        notes.save()
+        return redirect('lmn:latest_notes')
+    else:
+        return render(request, r'lmn\notes\edit.html', {'form': form})
+
+
 
 
 
