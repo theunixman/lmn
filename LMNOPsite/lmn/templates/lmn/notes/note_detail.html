@@ -6,5 +6,7 @@
 
 <p id="note_title"><b>{{ note.title}}</b></p>
 <p> id="note_text">{{ note.text }}</b></p>
+<img src="{{note.photo.url}}"}alt="">
+<a href="{% url 'lmn:edit_notes' pk=note.pk%}"><button>Edit</button></a>
 
 {% endblock %}
