@@ -1,9 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Pacifico);
-@import url(https://fonts.google.com/specimen/Open+Sans);
 
-body {
- font-family:'Pacifico';
-}
 h1 {
   font-family: 'Pacifico';
 }
@@ -18,9 +13,53 @@ h1 {
 #login_form.tr, #registration_form.tr {
   padding-top: 2px;
   padding-bottom: 2px;
+
 }
 
 #login_form.th, #registration_form.th {
   text-align: right;
 }
+#login{
+  background-color: gray;
+  width: 8.5em;
+  margin-left: 3.5em;
+  font-size: 1.5em;
+  margin-top: 0.5em;
+  color: white;
+  border-radius: 20px;
+}
+p{
 
+  font-family: 'Just Another Hand', cursive;
+  font-size: 2em;
+
+}
+#register{
+  background-image: url(http://files.constantcontact.com/bd43be08001/2126f1bc-58e5-4b24-96d4-249f7d7fee02.gif?a=1126208510819);
+  width: 7em;
+  height: 2.5em;
+  margin-left: 7em;
+  font-size: 1.5em;
+  margin-top: 0.5em;
+
+  border-radius: 20px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+#registration_form{
+   font-family: 'Lobster', cursive;
+   font-size: 1.5em;
+    background-image: url(https://media.giphy.com/media/FZIS6M00qtZ9C/giphy.gif);
+    border-radius: 2px;
+   color: saddlebrown;
+
+}
+.logon{
+  background-image: url(http://bestanimations.com/Nature/Water/endless-ocean-gif.gif);
+  border-radius: 20px;
+  margin-left: -4px;
+  width: 23em;
+  border: 3px solid white;
+  background-size: contain;
+}

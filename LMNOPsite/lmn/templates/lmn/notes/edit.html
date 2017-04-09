@@ -1,0 +1,20 @@
+{% extends 'lmn/base.html' %}
+
+
+<html lang="en">
+<head>
+    {% block content%}
+    <meta charset="UTF-8">
+    <title>Title</title>
+    </head>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{form.as_p}}
+       <input class="btn btn-primary" type='submit' value='Save changes'>
+    </form>
+    {% endblock %}
+
+<body>
+
+</body>
+</html>

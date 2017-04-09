@@ -1,6 +1,7 @@
 {% extends 'lmn/base.html' %}
 
 {% block content %}
+<link href="https://fonts.googleapis.com/css?family=Carrois+Gothic|Changa|Great+Vibes|Just+Another+Hand|Kaushan+Script|Lobster|Niconne" rel="stylesheet">
 
 <H2>Register</H2>
 
@@ -12,7 +13,7 @@
   <table id="registration_form">
     {{ form.as_table}}
   </table>
-  <button class="btn btn-primary" type='submit'>Register</button>
+  <button id="register" type='submit'></button>
 </form>
 
 {% endblock %}
