@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Venue, Artist, Note, Show
-from .forms import VenueSearchForm, NewNoteForm, ArtistSearchForm, UserRegistrationForm
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -51,6 +50,7 @@ def get_all_current_venues():
 
         print(venue_list)
         print(type(venue_list))
+        print(Venue.objects.all())
 
 
     except Exception as e:
