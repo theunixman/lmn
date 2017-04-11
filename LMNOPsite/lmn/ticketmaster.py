@@ -46,11 +46,18 @@ def get_all_current_venues():
                 if location not in venue_list:
 
                     venue_list[location] = city
+        
 
-
-
-        print(venue_list)
-        print(type(venue_list))
+        # for key, value in venue_list.items():
+        #
+        #     place = key
+        #     city = value
+        #     state = 'MN'
+        #
+        #     Venue.objects.create(name = place, city = city, state = state)
+        #
+        #
+        # print(Venue.objects.all())
 
 
 
