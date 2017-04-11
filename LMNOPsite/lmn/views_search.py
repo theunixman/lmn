@@ -15,7 +15,9 @@ def search_for_artist(request):
 
     form = ArtistSearchForm()
 
-    get_all_current_venues() # This returns a dictionary of all current venue events on ticketmaster for MN.
+    if request.method == 'GET':
+
+        print('need to get the query so I can search Ticketmaster.')
 
     #get_dates_for_artist()
 

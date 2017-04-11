@@ -16,6 +16,7 @@ import json
 # This is a test file for filtering out show data from Ticketmaster.
 #base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&keyword={}&stateCode=MN'
 
+# This class pulls data from ticketmaster and returns a dict of the Venues in Minnesota.
 def get_all_current_venues():
 
     base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&size=500&stateCode=MN'
@@ -35,7 +36,6 @@ def get_all_current_venues():
     try:
 
         artist = tm_json["_embedded"]['events']
-        print(type(artist))
 
         for entry in artist:
             for place in entry["_embedded"]['venues']:
@@ -46,18 +46,10 @@ def get_all_current_venues():
                 if location not in venue_list:
 
                     venue_list[location] = city
-        
 
-        # for key, value in venue_list.items():
-        #
-        #     place = key
-        #     city = value
-        #     state = 'MN'
-        #
-        #     Venue.objects.create(name = place, city = city, state = state)
-        #
-        #
-        # print(Venue.objects.all())
+
+        return venue_list
+
 
 
 
