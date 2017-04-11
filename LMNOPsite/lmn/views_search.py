@@ -20,7 +20,9 @@ def search_for_artist(request):
     #get_dates_for_artist() # This is a test for the ticketmaster, it doesn't mean anything yet and will eventually be moved.
 
 
-    get_all_current_venues() # This returns a dictionary of all current venue events on ticketmaster for MN.
+    if request.method == 'GET':
+
+        print('need to get the query so I can search Ticketmaster.')
 
     #get_dates_for_artist()
 

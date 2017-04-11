@@ -2,11 +2,19 @@
 {% block content %}
 
 <h2>Search for Artist</h2>
+<h3> This page allows you to search for bands that are playing in Minnesota and add them to the database </h3>
 
 <P>Artist Search</p>
+
   <form action="{% url 'lmn:search_for_artist' %}">
     {{ form }}
     <input type='submit' value='Search'>
   </form>
+
+<p> Search Results </p>
+
+<p> {{ artist_not_found }}</p>
+
+
 
 {% endblock %}
