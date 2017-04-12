@@ -11,6 +11,7 @@ from django.utils import timezone
 
 import requests
 import json
+import logging
 
 
 # This is a test file for filtering out show data from Ticketmaster.
@@ -55,47 +56,55 @@ def get_all_current_venues():
 
     except Exception as e:
 
-        print('problem')
+        logging.exception("Problem!")
 
 
 
-def get_dates_for_artist():
+def get_dates_for_artist(band_name):
 
+    base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&keyword={}&stateCode=MN'
 
     key = 'xqbpUW8lmN8nnoX3UHO7suHosVMf8oBF'
 
-    url = base_url.format(key)
+    url = base_url.format(key, band_name)
 
     response = requests.get(url)
 
     tm_json = response.json()
 
-    venue_list = dict()
-    city_list = []
+
+    show_list = dict()
+    venue_list = []
+
+    # Error check to see if the JSON found a event in Minnesota.
+    try:
+
+        artist = tm_json["_embedded"]['events']
+
+    except Exception as e:
+
+        print("no band found")
 
 
     try:
 
         artist = tm_json["_embedded"]['events']
-        print(type(artist))
 
         for entry in artist:
             for place in entry["_embedded"]['venues']:
+                for artists in entry["_embedded"]['attractions']:
 
-                location = place['name']
-                city = place['city']['name']
+                    artist = artists['name']
+                    print(artist)
+                    location = place['name']
+                    print(location)
+                    day = entry["dates"]["start"]["localDate"]
+                    print(day)
 
-                if location not in venue_list:
 
-                    venue_list[location] = city
-
-
-
-        print(venue_list)
-        print(type(venue_list))
 
 
 
     except Exception as e:
 
-        print('problem')
+        logging.exception("Problem!")

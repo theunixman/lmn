@@ -13,6 +13,15 @@
 
 <p> Search Results </p>
 
+<form action= "{{ request.path }}" method="post">
+
+  {% csrf_token %}
+
+  <input type="checkbox" name="save" value="saved"> Check to save event.<br>
+  <input type="submit" value="Submit">
+
+</form>
+
 <p> {{ artist_not_found }}</p>
 
 

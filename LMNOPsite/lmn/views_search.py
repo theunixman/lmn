@@ -15,10 +15,17 @@ def search_for_artist(request):
 
     form = ArtistSearchForm()
 
+
     if request.method == 'GET':
 
-        print('need to get the query so I can search Ticketmaster.')
+        band_search = request.GET.get('search_name')
 
-    #get_dates_for_artist()
+        band_results = get_dates_for_artist(band_search) # Will find the shows for the artist in MN.
+
+    if request.method == 'POST':
+
+        saved_show = request.POST.get('save')
+
+
 
     return render(request, 'lmn/database/data_entry.html', {'form':form})
