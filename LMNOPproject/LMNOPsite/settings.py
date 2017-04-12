@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'LMNOPsite.LMNOPsite.lmn'
+    'LMNOPsite.lmn'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -51,7 +51,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'LMNOPsite.LMNOPsite.urls'
+ROOT_URLCONF = 'LMNOPproject.LMNOPsite.urls'
 
 TEMPLATES = [
     {
