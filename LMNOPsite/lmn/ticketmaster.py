@@ -74,7 +74,7 @@ def get_dates_for_artist(band_name):
 
 
     show_list = dict()
-    venue_list = []
+
 
     # Error check to see if the JSON found a event in Minnesota.
     try:
@@ -95,14 +95,18 @@ def get_dates_for_artist(band_name):
                 for artists in entry["_embedded"]['attractions']:
 
                     artist = artists['name']
-                    print(artist)
                     location = place['name']
-                    print(location)
                     day = entry["dates"]["start"]["localDate"]
-                    print(day)
+
+                    venue_list = []
+
+                    venue_list.append(location)
+                    venue_list.append(day)
+
+                    show_list[artist] = venue_list
 
 
-
+        print(show_list)
 
 
     except Exception as e:
