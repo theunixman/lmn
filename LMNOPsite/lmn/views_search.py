@@ -15,7 +15,7 @@ def search_for_artist(request):
 
     form = ArtistSearchForm()
     search = request.GET.get('search_name')
-    print(search)
+
 
     #get_dates_for_artist() # This is a test for the ticketmaster, it doesn't mean anything yet and will eventually be moved.
 

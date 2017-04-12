@@ -103,6 +103,21 @@ def get_dates_for_artist(band_name):
 
         print(show_list)
 
+        value_list = []
+
+        for key, value in show_list.items():
+
+            name = key
+            value_list = show_list[key]
+            location = value_list[0]
+            date = value_list[1]
+
+            print(name)
+            print(location)
+            print(date)
+
+
+
 
     except Exception as e:
 
