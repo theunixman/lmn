@@ -37,24 +37,21 @@ def new_note(request, show_pk):
 @login_required
 def edit_notes(request, pk):
     notes = get_object_or_404(Note, pk=pk)
-<<<<<<< HEAD:LMNOPproject/lmn/views_notes.py
-    form = NewNoteForm(request.POST or None,  instance=notes)
-=======
+
+    form = NewNoteForm(request.POST or None, request.Files, instance=notes)
+
     form = NewNoteForm(request.POST or None, instance=notes)
->>>>>>> momo:LMNOPsite/lmn/views_notes.py
+
     if form.is_valid():
         notes = form.save(commit=False)
         notes.save()
         return redirect('lmn:latest_notes')
     else:
         return render(request, r'lmn\notes\edit.html', {'form': form})
-<<<<<<< HEAD:LMNOPproject/lmn/views_notes.py
-=======
 
 
 
 
->>>>>>> momo:LMNOPsite/lmn/views_notes.py
 
 def latest_notes(request):
     notes = Note.objects.all().order_by('posted_date').reverse()

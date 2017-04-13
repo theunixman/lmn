@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+
 import sys
 sys.path.append('..')
 
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'LMNOPproject.lmn'
+    'LMNOPproject.lmn',
+
 ]
 
 MIDDLEWARE_CLASSES = [
