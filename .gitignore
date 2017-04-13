@@ -10,3 +10,4 @@ executables
 geckodriver
 geckodriver.log
 LMNOPsite/geckodriver.log
+my_env/
