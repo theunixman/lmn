@@ -43,7 +43,7 @@ def edit_notes(request, pk):
         notes.save()
         return redirect('lmn:latest_notes')
     else:
-        return render(request, r'lmn\notes\edit.html', {'form': form})
+        return render(request, r'lmn/notes/edit.html', {'form': form})
 
 
 

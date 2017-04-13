@@ -14,7 +14,6 @@ import logging
 
 
 
-#base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&keyword={}&stateCode=MN'
 
 # This class pulls data from ticketmaster and returns a dict of the Venues in Minnesota.
 def get_all_current_venues():
@@ -147,7 +146,7 @@ def get_dates_for_artist(band_name):
                 entry = Show.objects.create(show_date = date, artist = artist_query[0], venue = venue_query[0])
 
                 return "entered"
-                
+
             else:
 
                 query = Show.objects.filter(show_date = date).filter(artist = artist_query[0]).filter(venue = venue_query[0])
