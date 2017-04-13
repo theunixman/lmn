@@ -17,7 +17,7 @@ def new_note(request, show_pk):
 
     if request.method == 'POST':
 
-        form = NewNoteForm(request.POST)
+        form = NewNoteForm(request.POST, request.FILES)
         if form.is_valid():
 
             note = form.save(commit=False);
@@ -37,22 +37,33 @@ def new_note(request, show_pk):
 @login_required
 def edit_notes(request, pk):
     notes = get_object_or_404(Note, pk=pk)
+<<<<<<< HEAD
 
     form = NewNoteForm(request.POST or None, request.Files, instance=notes)
 
     form = NewNoteForm(request.POST or None, instance=notes)
 
+=======
+    form = NewNoteForm(request.POST or None, request.FILES, instance=notes)
+>>>>>>> 0470da76a37228def1dcdde77b0d74ab5e1c0e2b
     if form.is_valid():
         notes = form.save(commit=False)
         notes.save()
         return redirect('lmn:latest_notes')
     else:
+<<<<<<< HEAD
         return render(request, r'lmn\notes\edit.html', {'form': form})
 
 
 
 
 
+=======
+        return render(request, r'lmn/notes/edit.html', {'form': form})
+
+
+
+>>>>>>> 0470da76a37228def1dcdde77b0d74ab5e1c0e2b
 def latest_notes(request):
     notes = Note.objects.all().order_by('posted_date').reverse()
     return render(request, 'lmn/notes/note_list.html', {'notes':notes})

@@ -6,6 +6,7 @@
 
 <p id="note_title"><b>{{ note.title}}</b></p>
 
+<<<<<<< HEAD
 <p class="note_text">{{ note.text }}</b></p>
 <img src="{{note.photo.url}}"}alt="">
 <a href="{% url 'lmn:edit_notes' pk=note.pk%}"><button>Edit</button></a>
@@ -13,5 +14,14 @@
 <p class="note_text">{{ note.text }}</b></p>
 a class="btn btn-default" href="{% url 'lmn:edit_notes' pk=note.pk%}"><span style="font-size:0.8em" class="glyphicon glyphicon-pencil"></span>Edit</a>
 
+=======
+<p id="note_text"><b>{{ note.text }}</b></p>
+
+<img src="{{note.photo.url}}"}alt="">
+<a href="{% url 'lmn:edit_notes' pk=note.pk%}"><button>Edit</button></a>
+
+<p id="note_text">{{ note.text }}</b></p>
+<a class="btn btn-default" href="{% url 'lmn:edit_notes' pk=note.pk%}"><span style="font-size:0.8em" class="glyphicon glyphicon-pencil"></span>Edit</a>
+>>>>>>> 0470da76a37228def1dcdde77b0d74ab5e1c0e2b
 
 {% endblock %}
