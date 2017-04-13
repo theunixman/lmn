@@ -17,7 +17,7 @@ def new_note(request, show_pk):
 
     if request.method == 'POST':
 
-        form = NewNoteForm(request.POST)
+        form = NewNoteForm(request.POST, request.FILES)
         if form.is_valid():
 
             note = form.save(commit=False);
@@ -37,7 +37,7 @@ def new_note(request, show_pk):
 @login_required
 def edit_notes(request, pk):
     notes = get_object_or_404(Note, pk=pk)
-    form = NewNoteForm(request.POST or None,  instance=notes)
+    form = NewNoteForm(request.POST or None, request.FILES, instance=notes)
     if form.is_valid():
         notes = form.save(commit=False)
         notes.save()
