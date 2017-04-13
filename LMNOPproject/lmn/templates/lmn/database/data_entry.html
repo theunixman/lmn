@@ -6,24 +6,23 @@
 
 <P>Artist Search</p>
 
-  <form action="{% url 'lmn:search_for_artist' %}">
+  <form action="{% url 'lmn:search_for_artist' %}" method="post">
+
+    {% csrf_token %}
     {{ form }}
+
     <input type='submit' value='Search'>
   </form>
 
 <p> Search Results </p>
 
-<form action= "{{ request.path }}" method="post">
+{% if result %}
 
-  {% csrf_token %}
+<p> {{ artist_not_found }} is not playing in Minnesota currently</p>
 
-  <input type="checkbox" name="save" value="saved"> Check to save event.<br>
-  <input type="submit" value="Submit">
+<p> {{ artist_added }} has been added to database, check Artist tab to view shows.</p>
 
-</form>
-
-<p> {{ artist_not_found }}</p>
-
+{% endif %}
 
 
 {% endblock %}

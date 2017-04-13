@@ -14,23 +14,26 @@ from .ticketmaster import get_dates_for_artist, get_all_current_venues
 def search_for_artist(request):
 
     form = ArtistSearchForm()
-    search = request.GET.get('search_name')
 
-
-    #get_dates_for_artist() # This is a test for the ticketmaster, it doesn't mean anything yet and will eventually be moved.
-
-
-
-    if request.method == 'GET':
-
-        band_search = request.GET.get('search_name')
-
-        band_results = get_dates_for_artist(band_search) # Will find the shows for the artist in MN.
+    # if request.method == 'GET':
+    #
+    #     band_search = request.GET.get('search_name')
+    #
+    #     band_results = get_dates_for_artist(band_search) # Will find the shows for the artist in MN.
 
     if request.method == 'POST':
 
-        saved_show = request.POST.get('save')
+        form = ArtistSearchForm(request.POST)
 
+        if form.is_valid():
+
+
+            band_search = form.cleaned_data['search_name']
+            print(band_search)
+
+            band_results = get_dates_for_artist(band_search) # Will find the shows for the artist in MN.
+
+            return render(request, 'lmn/database/data_entry.html', {'form':form})
 
 
     return render(request, 'lmn/database/data_entry.html', {'form':form})
