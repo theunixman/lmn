@@ -66,7 +66,7 @@ def get_dates_for_artist(band_name):
     response = requests.get(url)
 
     tm_json = response.json()
-    
+
     show_list = dict()
 
 
@@ -144,11 +144,16 @@ def get_dates_for_artist(band_name):
             if not show_query:
 
                 #print("temp")
-                Show.objects.create(show_date = date, artist = artist_query[0], venue = venue_query[0])
+                entry = Show.objects.create(show_date = date, artist = artist_query[0], venue = venue_query[0])
 
+                return "entered"
+                
             else:
 
-                print("show in database")
+                query = Show.objects.filter(show_date = date).filter(artist = artist_query[0]).filter(venue = venue_query[0])
+
+                return query
+
 
 
 

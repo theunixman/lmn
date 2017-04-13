@@ -16,12 +16,16 @@
 
 <p> Search Results </p>
 
-{% if result %}
-
+{% if not_found %}
 <p> {{ artist_not_found }} is not playing in Minnesota currently</p>
+{% endif %}
 
+{% if added %}
 <p> {{ artist_added }} has been added to database, check Artist tab to view shows.</p>
+{% endif %}
 
+{% if already %}
+<p> {{ artist_in_database }} is already in database, check Artist tab to view shows.</p>
 {% endif %}
 
 
