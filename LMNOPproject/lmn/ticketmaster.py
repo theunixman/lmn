@@ -112,9 +112,17 @@ def get_dates_for_artist(band_name):
             location = value_list[0]
             date = value_list[1]
 
-            print(name)
-            print(location)
-            print(date)
+            #artist = Artist.objects.create(name = name)
+
+            artist_query = Artist.objects.filter(name = name)
+            venue_query = Venue.objects.filter(name = location)
+
+            show_query = Show.objects.filter(show_date = date).filter(artist = artist_query[0]).filter(venue = venue_query[0])
+
+            if not show_query:
+
+                print("temp")
+                #Show.objects.create(show_date = date, artist = artist_query[0], venue = venue_query[0])
 
 
 
