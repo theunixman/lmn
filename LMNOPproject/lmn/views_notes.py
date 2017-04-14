@@ -38,10 +38,10 @@ def new_note(request, show_pk):
 def edit_notes(request, pk):
     notes = get_object_or_404(Note, pk=pk)
 
-    form = NewNoteForm(request.POST or None, request.Files, instance=notes)
-
-    form = NewNoteForm(request.POST or None, instance=notes)
     form = NewNoteForm(request.POST or None, request.FILES, instance=notes)
+
+    # form = NewNoteForm(request.POST or None, instance=notes)
+    # form = NewNoteForm(request.POST or None, request.FILES, instance=notes)
 
     if form.is_valid():
         notes = form.save(commit=False)
@@ -49,11 +49,12 @@ def edit_notes(request, pk):
         return redirect('lmn:latest_notes')
     else:
 
-        #return render(request, r'lmn\notes\edit.html', {'form': form})
-        return render(request, r'lmn/notes/edit.html', {'form': form})
+        form = NewNoteForm(instance=notes)
+        return render(request, 'lmn\\notes\\edit.html', {'form': form})
+        
 def latest_notes(request):
     notes = Note.objects.all().order_by('posted_date').reverse()
-    return render(request, 'lmn/notes/note_list.html', {'notes':notes})
+    return render(request, 'lmn\\notes\\note_list.html', {'notes':notes})
 
 
 def notes_for_show(request, show_pk):   # pk = show pk
