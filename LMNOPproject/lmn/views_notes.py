@@ -31,30 +31,24 @@ def new_note(request, show_pk):
     else :
         form = NewNoteForm()
 
-    return render(request, 'lmn/notes/new_note.html' , { 'form' : form , 'show':show })
+    return render(request, r'lmn\notes\new_note.html' , { 'form' : form , 'show':show })
 
 # user edit notes
 @login_required
 def edit_notes(request, pk):
     notes = get_object_or_404(Note, pk=pk)
-
     form = NewNoteForm(request.POST or None, request.FILES, instance=notes)
-
-    # form = NewNoteForm(request.POST or None, instance=notes)
-    # form = NewNoteForm(request.POST or None, request.FILES, instance=notes)
-
     if form.is_valid():
         notes = form.save(commit=False)
         notes.save()
         return redirect('lmn:latest_notes')
     else:
+        form = NewNoteForm( instance=notes)
+        return render(request, r'lmn\notes\edit.html', {'form': form})
 
-        form = NewNoteForm(instance=notes)
-        return render(request, 'lmn\\notes\\edit.html', {'form': form})
-        
 def latest_notes(request):
     notes = Note.objects.all().order_by('posted_date').reverse()
-    return render(request, 'lmn\\notes\\note_list.html', {'notes':notes})
+    return render(request, r'lmn\notes\note_list.html', {'notes':notes})
 
 
 def notes_for_show(request, show_pk):   # pk = show pk
@@ -63,10 +57,16 @@ def notes_for_show(request, show_pk):   # pk = show pk
     notes = Note.objects.filter(show=show_pk).order_by('posted_date').reverse()
     show = Show.objects.get(pk=show_pk)  # Contains artist, venue
 
-    return render(request, 'lmn/notes/note_list.html', {'show': show, 'notes':notes } )
+    return render(request, r'lmn\notes\note_list.html', {'show': show, 'notes':notes } )
 
 
 
 def note_detail(request, note_pk):
     note = get_object_or_404(Note, pk=note_pk)
-    return render(request, 'lmn/notes/note_detail.html' , {'note' : note })
+    return render(request, r'lmn\notes\note_detail.html' , {'note' : note })
+
+# A method that deletes notes added by the user
+def delete_notes(request, pk):
+    notes = get_object_or_404(Note, pk=pk)
+    notes.delete()
+    return redirect('lmn:latest_notes')
