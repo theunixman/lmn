@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 
 from .models import Venue, Artist, Note, Show
-from .forms import VenueSearchForm, NewNoteForm, ArtistSearchForm, UserRegistrationForm
+from .forms import VenueSearchForm, NewNoteForm, ArtistSearchForm, UserRegistrationForm, NotesSearchForm
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -65,8 +65,44 @@ def note_detail(request, note_pk):
     note = get_object_or_404(Note, pk=note_pk)
     return render(request, r'lmn\notes\note_detail.html' , {'note' : note })
 
-# A method that deletes notes added by the user
+# A method that deletes notes added by the user4
+@login_required
 def delete_notes(request, pk):
     notes = get_object_or_404(Note, pk=pk)
     notes.delete()
     return redirect('lmn:latest_notes')
+
+
+
+# def venue_list(request):
+#
+#     form = VenueSearchForm()
+#     search_name = request.GET.get('search_name')
+#
+#     if search_name:
+#         #search for this venue, display results
+#         venues = Venue.objects.filter(name__icontains=search_name).order_by('name')
+#     else :
+#         venues = Venue.objects.all().order_by('name')   # Todo paginate
+#
+#     return render(request, 'lmn/venues/venue_list.html', { 'venues' : venues, 'form':form, 'search_term' : search_name })
+
+def search_user_notes(request):
+
+    search_name = request.GET.get('search_name')
+
+    if search_name:
+        notes = Notes.objects.filter(title__incontains=search_name).order_by('title')
+    else:
+        notes = ''
+        notes = Note.objects.all().order_by('title')
+
+    #     search_text = request.POST['search_text']
+    #     print(search_text)
+    # else:
+    #     search_text=""
+    #
+    #
+    # notes = Note.objects.filter(title__icontains=search_text)
+
+    return render(request, r'lmn\notes\search_notes.html', {'notes': notes})

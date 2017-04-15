@@ -10,11 +10,19 @@
   {% block content %}
 
 
+<h3>Search Notes</h3>
+  {% csrf_token %}
+  <ul id="search_results">
+
+  </ul>
+<input type="text" id="search" name="search" value="">
 {% if show %}
   <h2 id="show_title">Notes for {{ show.artist.name }} at {{ show.venue.name }} on {{ show.show_date }}</h2>
 {% else %}
   <h2>Latest Notes</h2>
+
 {% endif %}
+
 
 
 {% for note in notes %}
