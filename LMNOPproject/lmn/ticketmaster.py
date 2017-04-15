@@ -13,8 +13,6 @@ import json
 import logging
 
 
-
-
 # This class pulls data from ticketmaster and returns a dict of the Venues in Minnesota.
 def get_all_current_venues():
 
@@ -145,7 +143,6 @@ def get_dates_for_artist(band_name):
                 #print("temp")
                 entry = Show.objects.create(show_date = date, artist = artist_query[0], venue = venue_query[0])
 
-                return "entered"
 
             else:
 

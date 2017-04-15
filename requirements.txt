@@ -9,3 +9,4 @@ dj-database-url==0.4.2
 psycopg2==2.7.1
 requests==2.9.1
 Pillow==4.1.0
+django-background-tasks==1.1.8
