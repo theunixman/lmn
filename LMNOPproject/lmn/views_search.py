@@ -22,7 +22,6 @@ def search_for_artist(request):
         if form_post.is_valid():
 
             band_search = form_post.cleaned_data['search_name']
-            print(band_search)
 
             band_results = get_dates_for_artist(band_search) # Will find the shows for the artist in MN.
 

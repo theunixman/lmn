@@ -12,6 +12,22 @@ from datetime import datetime, timedelta
 import requests
 import json
 import logging
+from .keys import keys
+
+def all_current_venues_response():
+
+    base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&size=500&stateCode=MN'
+
+    key = keys['TM_KEY']
+
+    url = base_url.format(key)
+
+    response = requests.get(url)
+
+    tm_json = response.json()
+
+    return tm_json
+
 
 
 # This class pulls data from ticketmaster and returns a dict of the Venues in Minnesota.
@@ -19,7 +35,7 @@ def get_all_current_venues():
 
     base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&size=500&stateCode=MN'
 
-    key = 'xqbpUW8lmN8nnoX3UHO7suHosVMf8oBF'
+    key = keys['TM_KEY']
 
     url = base_url.format(key)
 
@@ -57,7 +73,7 @@ def get_dates_for_artist(band_name):
 
     base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&keyword={}&stateCode=MN'
 
-    key = 'xqbpUW8lmN8nnoX3UHO7suHosVMf8oBF'
+    key = keys['TM_KEY']
 
     url = base_url.format(key, band_name)
 
@@ -76,6 +92,8 @@ def get_dates_for_artist(band_name):
     except Exception as e:
 
         print("no band found")
+
+        return None
 
 
     try:
@@ -104,8 +122,6 @@ def get_dates_for_artist(band_name):
                     show_list[artist] = venue_list
 
 
-        print(show_list)
-
         value_list = []
 
         # loop over created dictionary and add show/artist to database.
@@ -118,18 +134,12 @@ def get_dates_for_artist(band_name):
 
 
             artist_query = Artist.objects.filter(name = name)
-            venue_query = Venue.objects.filter(name = location)
 
-            # two checks to see if artist or venue don;t exist in database
+            # checks to see if artist doesn't exist in database
             if not artist_query:
 
                 #print("no artist found")
                 artist = Artist.objects.create(name = name)
-
-                # TODO we need more info to create a venue.
-                if not venue_query:
-
-                    print("no venue found")
 
 
             artist_query = Artist.objects.filter(name = name)
@@ -144,6 +154,7 @@ def get_dates_for_artist(band_name):
                 #print("temp")
                 entry = Show.objects.create(show_date = date, artist = artist_query[0], venue = venue_query[0])
 
+                return "entered"
 
             else:
 
@@ -164,8 +175,7 @@ def get_next_day_events():
 
     base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&startDateTime={}&endDateTime={}&stateCode=MN'
 
-    key = 'xqbpUW8lmN8nnoX3UHO7suHosVMf8oBF'
-
+    key = keys['TM_KEY']
 
     # getting time and formatting it for ticketmaster.
     time = datetime.utcnow()
