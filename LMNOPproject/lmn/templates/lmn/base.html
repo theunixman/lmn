@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>LMNOP</title>
-<link rel="stylesheet" href="{% static 'css/base_style.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css\base_style.css' %}" type="text/css">
 
 <link href="https://fonts.googleapis.com/css?family=Carrois+Gothic|Changa|Great+Vibes|Just+Another+Hand|Kaushan+Script|Lobster|Niconne" rel="stylesheet">
 <!-- <script scr="{% static '/js/search.js' %}" type="text/javascript"> -->
@@ -23,15 +23,17 @@ crossorigin="anonymous"></script>
 <body>
 <div class="container">
   <div class="row">
-    <div class="col-md-9 col-md-offset-2">
+    <div class="col-xs-12 col-md-10 col-xm-10">
       <div class="jumbotron">
         <h1 class="headline">LMN</h1>
-      <button class="inline"><a  href="{% url 'lmn:venue_list' %}">Venues</a></button>
-      <button class="inline"><a  href="{% url 'lmn:artist_list' %}">Artists</a></button>
-      <button class="inline"><a  href="{% url 'lmn:latest_notes' %}">Notes</a></button>
-      <button class="inline"><a  href="{% url 'lmn:search_for_artist' %}">Band Search</a></button>
-      </div>
 
+        <div class="btn-group " role="group" class="menu_button">
+          <button  type="button" class="btn-lg" position='fixed'><a  href="{% url 'lmn:venue_list' %}">Venues</a></button>
+          <button type="button" class='btn-lg' position='fixed' ><a  href="{% url 'lmn:artist_list' %}">Artists</a></button>
+          <button  type="button" class='btn-lg' position='fixed'><a  href="{% url 'lmn:latest_notes' %}">Notes</a></button>
+          <button  type="button" class='btn-lg' position='fixed'><a  href="{% url 'lmn:search_for_artist' %}">Band Search</a></button>
+        </div>
+      </div>
 
 {% if user.is_authenticated %}
   <span id='welcome_user_msg'>You are logged in, <a href="{% url 'lmn:user_profile' user_pk=user.pk %}">{{ user.username }}</a>.  <a href="{% url 'logout' %}">Logout</a></span>

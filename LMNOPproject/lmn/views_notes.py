@@ -72,21 +72,6 @@ def delete_notes(request, pk):
     notes.delete()
     return redirect('lmn:latest_notes')
 
-
-
-# def venue_list(request):
-#
-#     form = VenueSearchForm()
-#     search_name = request.GET.get('search_name')
-#
-#     if search_name:
-#         #search for this venue, display results
-#         venues = Venue.objects.filter(name__icontains=search_name).order_by('name')
-#     else :
-#         venues = Venue.objects.all().order_by('name')   # Todo paginate
-#
-#     return render(request, 'lmn/venues/venue_list.html', { 'venues' : venues, 'form':form, 'search_term' : search_name })
-
 def search_user_notes(request):
 
     search_name = request.GET.get('search_name')
@@ -96,13 +81,4 @@ def search_user_notes(request):
     else:
         notes = ''
         notes = Note.objects.all().order_by('title')
-
-    #     search_text = request.POST['search_text']
-    #     print(search_text)
-    # else:
-    #     search_text=""
-    #
-    #
-    # notes = Note.objects.filter(title__icontains=search_text)
-
     return render(request, r'lmn\notes\search_notes.html', {'notes': notes})
