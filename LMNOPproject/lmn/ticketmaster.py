@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
+import datetime
 
 import requests
 import json
@@ -157,7 +158,102 @@ def get_dates_for_artist(band_name):
 
         logging.exception("Problem!")
 
-
+# start the daily task of adding events to database from ticketmaster.
 def get_next_day_events():
 
-    print("got here")
+    today = datetime.date.today()
+
+    print(today)
+
+
+    # base_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey={}&keyword={}&stateCode=MN'
+    #
+    # key = 'xqbpUW8lmN8nnoX3UHO7suHosVMf8oBF'
+    #
+    # url = base_url.format(key)
+    #
+    # response = requests.get(url)
+    #
+    # tm_json = response.json()
+    #
+    # show_list = dict()
+    #
+    # try:
+    #
+    #     artist = tm_json["_embedded"]['events']
+    #
+    #     # Loop over json and pull relevant info.
+    #     for entry in artist:
+    #         for place in entry["_embedded"]['venues']:
+    #             for artists in entry["_embedded"]['attractions']:
+    #
+    #                 artist = artists['name']
+    #                 location = place['name']
+    #                 day = entry["dates"]["start"]["localDate"]
+    #                 time = entry["dates"]["start"]["localTime"]
+    #
+    #                 date_time = day + " " + time
+    #
+    #                 print(date_time)
+    #
+    #                 venue_list = []
+    #
+    #                 venue_list.append(location)
+    #                 venue_list.append(date_time)
+    #
+    #                 show_list[artist] = venue_list
+    #
+    #
+    #     print(show_list)
+    #
+    #     value_list = []
+    #
+    #     # loop over created dictionary and add show/artist to database.
+    #     for key, value in show_list.items():
+    #
+    #         name = key
+    #         value_list = show_list[key]
+    #         location = value_list[0]
+    #         date = value_list[1]
+    #
+    #
+    #         artist_query = Artist.objects.filter(name = name)
+    #         venue_query = Venue.objects.filter(name = location)
+    #
+    #         # two checks to see if artist or venue don;t exist in database
+    #         if not artist_query:
+    #
+    #             #print("no artist found")
+    #             artist = Artist.objects.create(name = name)
+    #
+    #             # TODO we need more info to create a venue.
+    #             if not venue_query:
+    #
+    #                 print("no venue found")
+    #
+    #
+    #         artist_query = Artist.objects.filter(name = name)
+    #
+    #         venue_query = Venue.objects.filter(name = location)
+    #
+    #         show_query = Show.objects.filter(show_date = date).filter(artist = artist_query[0]).filter(venue = venue_query[0])
+    #
+    #         # if the show hasn't been created.
+    #         if not show_query:
+    #
+    #             #print("temp")
+    #             entry = Show.objects.create(show_date = date, artist = artist_query[0], venue = venue_query[0])
+    #
+    #
+    #         else:
+    #
+    #             query = Show.objects.filter(show_date = date).filter(artist = artist_query[0]).filter(venue = venue_query[0])
+    #
+    #             return query
+    #
+    #
+    #
+    #
+    # except Exception as e:
+    #
+    #     logging.exception("Problem!")

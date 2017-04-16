@@ -3,10 +3,13 @@ from .ticketmaster import get_all_current_venues
 from .models import Venue
 
 from background_task.models import Task
-from .events_worker import get_tommorow_events, background_task_check
+from .events_worker import get_tommorow_events, background_task_check, test_date
 
-if not background_task_check():
-    get_tommorow_events(repeat=Task.DAILY, repeat_until=None)
+# if not background_task_check():
+#     get_tommorow_events(repeat=Task.DAILY, repeat_until=None)
+
+test_date()
+
 
 
 def homepage(request):
