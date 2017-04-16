@@ -10,6 +10,8 @@ from django.forms import ValidationError
 class VenueSearchForm(forms.Form):
     search_name = forms.CharField(label='Venue Name', max_length=200)
 
+class NotesSearchForm(forms.Form):
+    search_name = forms.CharField(label='Note Search', max_length=200)
 
 class ArtistSearchForm(forms.Form):
     search_name = forms.CharField(label='Artist Name', max_length=200)
@@ -25,6 +27,7 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('user','about','joined_date')
+
 
 class UserRegistrationForm(UserCreationForm):
 

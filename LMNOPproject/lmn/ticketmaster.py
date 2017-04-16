@@ -156,3 +156,8 @@ def get_dates_for_artist(band_name):
     except Exception as e:
 
         logging.exception("Problem!")
+
+
+def get_next_day_events():
+
+    print("got here")

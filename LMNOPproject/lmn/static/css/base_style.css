@@ -1,7 +1,25 @@
+.jumbotron{
+  height:200px;
+  background-image: url(http://38.media.tumblr.com/3e1581b1515e2d5305a67d8c31a78d86/tumblr_ndp7fbYtOZ1qajx6xo1_500.gif);
+  background-repeat: no-repeat;
+  background-size: cover;
 
-h1 {
-  font-family: 'Pacifico';
 }
+.inline{
+  width: 100px;
+  font-size: 1em;
+  font-color: white;
+  height: 30px;
+  background: gray;
+  color: white;
+}
+
+.headline{
+  font-size: 2px;
+}
+/*h1 {*/
+  /*font-family: 'Pacifico';*/
+/*}*/
 .btn{min-width:250px;
   background: #000;}
 #welcome_user_msg, #login_or_sign_up {

@@ -3,25 +3,35 @@
 <head>
   <title>LMNOP</title>
 <link rel="stylesheet" href="{% static 'css/base_style.css' %}" type="text/css">
-  <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
-<!-- Optional theme -->
-<link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}" type="text/css">
+
 <link href="https://fonts.googleapis.com/css?family=Carrois+Gothic|Changa|Great+Vibes|Just+Another+Hand|Kaushan+Script|Lobster|Niconne" rel="stylesheet">
+<!-- <script scr="{% static '/js/search.js' %}" type="text/javascript"> -->
 
+</script>
 
-
+<script
+src="https://code.jquery.com/jquery-3.2.1.js"
+integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+crossorigin="anonymous"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- <script src="{% static 'js/jquery.3.2.1' %}" type="text/javascript">
+</script> -->
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
 <body>
 <div class="container">
   <div class="row">
-    <div class="col-md-6 col-md-offset-3">
-<h1>LMN</h1>
+    <div class="col-md-9 col-md-offset-2">
+      <div class="jumbotron">
+        <h1 class="headline">LMN</h1>
+      <button class="inline"><a  href="{% url 'lmn:venue_list' %}">Venues</a></button>
+      <button class="inline"><a  href="{% url 'lmn:artist_list' %}">Artists</a></button>
+      <button class="inline"><a  href="{% url 'lmn:latest_notes' %}">Notes</a></button>
+      <button class="inline"><a  href="{% url 'lmn:search_for_artist' %}">Band Search</a></button>
+      </div>
 
-
-<a href="{% url 'lmn:venue_list' %}">Venues |</a>
-<a href="{% url 'lmn:artist_list' %}">Artists |</a>
-<a href="{% url 'lmn:latest_notes' %}">Notes</a>
-<a href="{% url 'lmn:search_for_artist' %}">Band Search</a>
 
 {% if user.is_authenticated %}
   <span id='welcome_user_msg'>You are logged in, <a href="{% url 'lmn:user_profile' user_pk=user.pk %}">{{ user.username }}</a>.  <a href="{% url 'logout' %}">Logout</a></span>
@@ -39,7 +49,10 @@
       </div>
 </div>
   </div>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-</body>
 
+
+  <!-- Latest compiled and minified JavaScript-->
+
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+</body>
 </html>

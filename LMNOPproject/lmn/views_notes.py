@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 
 from .models import Venue, Artist, Note, Show
-from .forms import VenueSearchForm, NewNoteForm, ArtistSearchForm, UserRegistrationForm
+from .forms import VenueSearchForm, NewNoteForm, ArtistSearchForm, UserRegistrationForm, NotesSearchForm
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -31,7 +31,7 @@ def new_note(request, show_pk):
     else :
         form = NewNoteForm()
 
-    return render(request, 'lmn/notes/new_note.html' , { 'form' : form , 'show':show })
+    return render(request, r'lmn\notes\new_note.html' , { 'form' : form , 'show':show })
 
 # user edit notes
 @login_required
@@ -43,13 +43,12 @@ def edit_notes(request, pk):
         notes.save()
         return redirect('lmn:latest_notes')
     else:
-        return render(request, r'lmn/notes/edit.html', {'form': form})
-
-
+        form = NewNoteForm( instance=notes)
+        return render(request, r'lmn\notes\edit.html', {'form': form})
 
 def latest_notes(request):
     notes = Note.objects.all().order_by('posted_date').reverse()
-    return render(request, 'lmn/notes/note_list.html', {'notes':notes})
+    return render(request, r'lmn\notes\note_list.html', {'notes':notes})
 
 
 def notes_for_show(request, show_pk):   # pk = show pk
@@ -58,10 +57,52 @@ def notes_for_show(request, show_pk):   # pk = show pk
     notes = Note.objects.filter(show=show_pk).order_by('posted_date').reverse()
     show = Show.objects.get(pk=show_pk)  # Contains artist, venue
 
-    return render(request, 'lmn/notes/note_list.html', {'show': show, 'notes':notes } )
+    return render(request, r'lmn\notes\note_list.html', {'show': show, 'notes':notes } )
 
 
 
 def note_detail(request, note_pk):
     note = get_object_or_404(Note, pk=note_pk)
-    return render(request, 'lmn/notes/note_detail.html' , {'note' : note })
+    return render(request, r'lmn\notes\note_detail.html' , {'note' : note })
+
+# A method that deletes notes added by the user4
+@login_required
+def delete_notes(request, pk):
+    notes = get_object_or_404(Note, pk=pk)
+    notes.delete()
+    return redirect('lmn:latest_notes')
+
+
+
+# def venue_list(request):
+#
+#     form = VenueSearchForm()
+#     search_name = request.GET.get('search_name')
+#
+#     if search_name:
+#         #search for this venue, display results
+#         venues = Venue.objects.filter(name__icontains=search_name).order_by('name')
+#     else :
+#         venues = Venue.objects.all().order_by('name')   # Todo paginate
+#
+#     return render(request, 'lmn/venues/venue_list.html', { 'venues' : venues, 'form':form, 'search_term' : search_name })
+
+def search_user_notes(request):
+
+    search_name = request.GET.get('search_name')
+
+    if search_name:
+        notes = Notes.objects.filter(title__incontains=search_name).order_by('title')
+    else:
+        notes = ''
+        notes = Note.objects.all().order_by('title')
+
+    #     search_text = request.POST['search_text']
+    #     print(search_text)
+    # else:
+    #     search_text=""
+    #
+    #
+    # notes = Note.objects.filter(title__icontains=search_text)
+
+    return render(request, r'lmn\notes\search_notes.html', {'notes': notes})

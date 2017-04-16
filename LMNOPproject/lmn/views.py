@@ -2,6 +2,12 @@ from django.shortcuts import render
 from .ticketmaster import get_all_current_venues
 from .models import Venue
 
+from background_task.models import Task
+from .events_worker import get_tommorow_events, background_task_check
+
+if not background_task_check():
+    get_tommorow_events(repeat=Task.DAILY, repeat_until=None)
+
 
 def homepage(request):
 
@@ -21,7 +27,5 @@ def homepage(request):
             state = 'MN'
 
             Venue.objects.create(name = place, city = city, state = state)
-
-
 
     return render(request, 'lmn/home.html')

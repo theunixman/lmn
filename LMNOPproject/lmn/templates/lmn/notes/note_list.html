@@ -10,11 +10,19 @@
   {% block content %}
 
 
+<h3>Search Notes</h3>
+  {% csrf_token %}
+  <ul id="search_results">
+
+  </ul>
+<input type="text" id="search" name="search" value="">
 {% if show %}
   <h2 id="show_title">Notes for {{ show.artist.name }} at {{ show.venue.name }} on {{ show.show_date }}</h2>
 {% else %}
   <h2>Latest Notes</h2>
+
 {% endif %}
+
 
 
 {% for note in notes %}
@@ -26,7 +34,7 @@
   <P class="note_info">Posted {{ note.posted_date|timesince }} ago by <a class='user' href="{% url 'lmn:user_profile' user_pk=note.user.pk %}">{{ note.user.username }}</a></p>
   <p class='note_text'>{{ note.text|truncatechars:100 }}</p>
   <a class="btn btn-default" href="{% url 'lmn:edit_notes' pk=note.pk%}"><span style="font-size:0.8em" class="glyphicon glyphicon-pencil"></span>Edit</a>
-
+  <a class="btn btn-default" href="{% url 'lmn:delete_notes' pk=note.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
   <hr>
 
 
@@ -52,4 +60,3 @@ display button to add new note for that show. -->
 {% endblock content %}
   </body>
 </html>
-
