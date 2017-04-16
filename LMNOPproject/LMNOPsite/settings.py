@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'background_task',
     'LMNOPproject.lmn',
-    'background_task'
 ]
 
 MIDDLEWARE_CLASSES = [
