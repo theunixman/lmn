@@ -16,8 +16,3 @@ def background_task_check():
 @background()
 def get_tommorow_events():
     get_next_day_events()
-
-def test_date():
-
-    get_next_day_events()
-    
