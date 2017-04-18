@@ -12,14 +12,14 @@ try:
     db = psycopg2.connect(database='lmnop', user='lmnop', password='yankees7')
     cur = db.cursor()
 
-    search = 'SELECT * FROM lmn_note'
-    cur.execute(search)
-    rows = cur.fetchall()
-    print(rows)
+    # search = 'SELECT * FROM lmn_note'
+    # cur.execute(search)
+    # rows = cur.fetchall()
+    # print(rows)
 
-    artist = 'Norah Jones'
-    search = 'SELECT * FROM lmn_artist WHERE name=%s'
-    cur.execute(search, (artist))
+    artist = ('Norah Jones',)
+    #search = 'SELECT * FROM lmn_artist WHERE name = %s'
+    cur.execute('SELECT * FROM lmn_artist WHERE name=?', ('Norah Jones')) # TODO can't seem to figure out how to pass a string into query.
     rows = cur.fetchall()
     print(rows)
 
