@@ -1,2 +1,2 @@
-worker: python3 manage.py process_tasks --duration 300
+worker: python3 LMNOPproject.fetch_ticketmaster_each_day.py
 web: gunicorn LMNOPproject.LMNOPsite.wsgi --log-file -

@@ -12,8 +12,16 @@ try:
     db = psycopg2.connect(database='lmnop', user='lmnop', password='yankees7')
     cur = db.cursor()
 
-    # cur.execute('SELECT * FROM lmn_note')
-    # rows = cur.fetchall()
+    search = 'SELECT * FROM lmn_note'
+    cur.execute(search)
+    rows = cur.fetchall()
+    print(rows)
+
+    artist = 'Norah Jones'
+    search = 'SELECT * FROM lmn_artist WHERE name=%s'
+    cur.execute(search, (artist))
+    rows = cur.fetchall()
+    print(rows)
 
 
     # start the daily task of adding events to database from ticketmaster.
@@ -23,11 +31,10 @@ try:
 
     # getting time and formatting it for ticketmaster.
     time = datetime.utcnow()
-    start_time = time + timedelta(days=1) - timedelta(hours=10)
+    start_time = time + timedelta(days=1) - timedelta(hours=13)
     final_start = start_time.strftime("%Y-%m-%dT%H:%M:%SZ")
-    end_time = time + timedelta(days=2) - timedelta(hours=10)
+    end_time = time + timedelta(days=2) - timedelta(hours=13)
     final_end = end_time.strftime("%Y-%m-%dT%H:%M:%SZ")
-
 
     url = base_url.format(key,final_start,final_end)
 
@@ -35,7 +42,8 @@ try:
 
     tm_json = response.json()
 
-    print(tm_json)
+    #print(tm_json)
+
 
 
     # show_list = dict()
