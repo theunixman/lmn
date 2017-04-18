@@ -19,7 +19,7 @@ try:
 
     artist = ('Norah Jones',)
     #search = 'SELECT * FROM lmn_artist WHERE name = %s'
-    cur.execute('SELECT * FROM lmn_artist WHERE name=?', ('Norah Jones')) # TODO can't seem to figure out how to pass a string into query.
+    cur.execute('SELECT * FROM lmn_artist WHERE name=%s', ('Norah Jones',)) # TODO can't seem to figure out how to pass a string into query.
     rows = cur.fetchall()
     print(rows)
 
