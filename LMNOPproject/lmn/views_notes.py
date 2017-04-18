@@ -72,13 +72,20 @@ def delete_notes(request, pk):
     notes.delete()
     return redirect('lmn:latest_notes')
 
-def search_user_notes(request):
+class NoteJSONEncoder(DjangoJSONEncoder):
+	def default(self, obj):
+		if isinstance(obj, Place):
+			return obj.__dict__
 
-    search_name = request.GET.get('search_name')
 
-    if search_name:
-        notes = Notes.objects.filter(title__incontains=search_name).order_by('title')
-    else:
-        notes = ''
-        notes = Note.objects.all().order_by('title')
-    return render(request, r'lmn/notes/search_notes.html', {'notes': notes})
+def search_place(request):
+	note = request.GET.get('query')
+
+	if place:
+		notes = list(Place.objects.filter(name__icontains=note).order_by('title'))
+
+	else:
+		notes = list(Place.objects.all().order_by('title'))
+
+
+	return JsonResponse(notes, encoder=NoteJSONEncoder, safe=False)
