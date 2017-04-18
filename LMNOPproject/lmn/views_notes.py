@@ -8,7 +8,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
-
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.core.serializers.json import DjangoJSONEncoder
+import json
 
 @login_required
 def new_note(request, show_pk):
@@ -74,18 +76,18 @@ def delete_notes(request, pk):
 
 class NoteJSONEncoder(DjangoJSONEncoder):
 	def default(self, obj):
-		if isinstance(obj, Place):
+		if isinstance(obj, Note):
 			return obj.__dict__
 
 
-def search_place(request):
+def search_notes(request):
 	note = request.GET.get('query')
 
-	if place:
-		notes = list(Place.objects.filter(name__icontains=note).order_by('title'))
+	if note:
+		notes = list(Note.objects.filter(name__icontains=note).order_by('title'))
 
 	else:
-		notes = list(Place.objects.all().order_by('title'))
+		notes = list(Note.objects.all().order_by('title'))
 
 
 	return JsonResponse(notes, encoder=NoteJSONEncoder, safe=False)

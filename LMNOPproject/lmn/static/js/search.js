@@ -1,23 +1,64 @@
 //Trying to implement ajax auto complete search for notes at this url http://127.0.0.1:8000/notes/latest/
 // I want to load the html data from http://127.0.0.1:8000/notes/search to this function  and provide a base on What
 // the user is typing in the input box with id #search
-$(function() {
-  $('#search').keyup(function() {
-    $.ajax({
-      type: "POST",
-      url: "/notes/search/",
-      data: {
-        'search_text' : $('#search').val(),
-        'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
-      },
-      sucess : searchSucess,
-      dataType: 'html'
-    });
+$(function(){
+
+  // Optional: load everything when page loads
+  $.get(
+    'search'
+    // No parameters: /search will return everything.
+    // This is probably not desirable behavior since everything can be a LOT of data!
+  ).done(function(data){
+    console.log('done')
+    update_search_results(data)
+  }).fail(function(){
+    console.log('todo handle errors here')
   });
+
+
+  // Searching - respond to user keyup events.
+  $('#search_input').keyup(function(){
+
+    var text = $(this).val();
+    console.log(text);
+
+    $.get(
+      'search',
+      { 'query' : text }
+    ).done(function(data){
+      console.log('done')
+      update_search_results(data)
+    }).fail(function(){
+      console.log('todo handle errors here')
+    });
+
+  });
+
 });
 
+function update_search_results(data) {
 
-function searchSucess(data, textStatus, jqXHR) {
-  $('#search-results').html(data);
+  console.log(data)  // Just for debugging,
+
+  //Delete all current elements inside search_results
+  var results = $('#search_results')
+  results.empty();
+
+  // Display 'no results found' message if no data returned.
+
+  if (!data || data.length == 0 ) {
+    results.append('<p><i>No search results</i></p>')
+
+  }
+
+  // Loop over results array. Create an element for each result.
+  // Replace this with code to create the elements that you want on your page.
+
+  else {
+    for (var r = 0 ; r < data.length ; r++) {
+      result = data[r]
+      results.append('<p>' + result.name + '</p>')
+    }
+  }
 
 }
