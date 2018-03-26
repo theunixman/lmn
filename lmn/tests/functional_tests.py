@@ -13,10 +13,12 @@ from django.contrib.auth.models import User
 class HomePageTest(LiveServerTestCase):
     ''' hello selenium '''
 
-    browser = webdriver.Firefox()
-    browser.get('http://localhost:8000')
-    assert 'LMN' in browser.title
-    browser.quit()
+    def test_home_page(self):
+        browser = webdriver.Firefox()
+        browser.get('http://localhost:8000')
+        assert 'Welcome to Live Music Notes' in browser.page_source
+        assert 'LMN' in browser.title
+        browser.quit()
 
 
 class BrowseArtists(LiveServerTestCase):
@@ -181,6 +183,7 @@ class BrowseArtists(LiveServerTestCase):
 
         # Verify correct title
         title = self.browser.find_element_by_id('artist_list_title')
+        print(title.text)
         assert 'Artists matching \'e\'' in title.text
 
         assert 'Yes' in self.browser.page_source
@@ -459,10 +462,12 @@ class TestNotes(LiveServerTestCase):
         password.send_keys('qwertyuiop')
         username.submit()
 
-        time.sleep(1)
+        time.sleep(2)
 
         # Get show page, the list of notes for an example show
         self.browser.get(self.live_server_url + '/notes/for_show/2')
+
+        time.sleep(2)  
 
         # Find and click on 'add note' button
         add_note = self.browser.find_element_by_id('add_note')

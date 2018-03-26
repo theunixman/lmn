@@ -35,37 +35,56 @@ will be able to use these to log into admin console at
 
 To run tests  (some currently fail - see Issues)
 
+```
 python manage.py test lmn.tests
+```
 
 Or just some of the tests,
+
+```
 python manage.py test lmn.tests.test_views
 python manage.py test lmn.tests.test_views.TestUserAuthentication
 python manage.py test lmn.tests.test_views.TestUserAuthentication.test_user_registration_logs_user_in
+```
 
 
 ### Functional Tests with Selenium
 
 Install (upgrade to the latest version if you already have it) Firefox browser. It works best for automated functional testing with Selenium.
 
-geckodriver needs to be in path or you need to tell Selenim where it is. Pick an approach: http://stackoverflow.com/questions/40208051/selenium-using-python-geckodriver-executable-needs-to-be-in-path
+Make sure you have the latest version of Firefox, and the most recent geckodriver, and latest Selenium.
 
-python manage.py runserver
+geckodriver needs to be in path or you need to tell Selenium where it is. Pick an approach: http://stackoverflow.com/questions/40208051/selenium-using-python-geckodriver-executable-needs-to-be-in-path
+
+If your DB is at GCP, your tests might time out, and you might need to use longer waits http://selenium-python.readthedocs.io/waits.html
+
+Start your server with `python manage.py runserver` and then
 
 ```
 python manage.py test lmn.tests.functional_tests
 ```
 
+Or select tests, for example,
+```
+python manage.py test lmn.tests.functional_tests.HomePageTest
+python manage.py test lmn.tests.functional_tests.BrowseArtists.test_searching_artists
+```
+
+
 ### Test coverage
 
 From directory with manage.py in it,
 
+```
 coverage run --source='.' manage.py test lmn.tests
 
 coverage report
+```
 
 
 ### Optional, if wanting to install and use with local postgresql
 
+A local PostgreSQL server will be faster than a GCP one.
 https://github.com/DjangoGirls/tutorial-extensions/blob/master/optional_postgresql_installation/README.md
 
 Set admin password, remember it.
