@@ -85,7 +85,7 @@ coverage report
 ### Optional, if wanting to install and use with local postgresql
 
 A local PostgreSQL server will be faster than a GCP one.
-https://github.com/DjangoGirls/tutorial-extensions/blob/master/optional_postgresql_installation/README.md
+https://github.com/DjangoGirls/tutorial-extensions/tree/master/en/optional_postgresql_installation
 
 Set admin password, remember it.
 
