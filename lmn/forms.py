@@ -19,6 +19,12 @@ class NewNoteForm(forms.ModelForm):
         model = Note
         fields = ('title', 'text')
 
+class UserEditForm(forms.Form):
+    user_name = forms.CharField(label='User Name')
+    user_first = forms.CharField(label='User First Name')
+    user_last = forms.CharField(label='User Last Name')
+    user_email = forms.EmailField(label='User Email')
+    user_about_me = forms.CharField(label='About Me', widget=forms.Textarea)
 
 class UserRegistrationForm(UserCreationForm):
 
