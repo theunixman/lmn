@@ -4,6 +4,13 @@ body {
   padding: 2px;
 }
 
+/*THIS IS TEXT COLOR for text-styled elements.
+  I put it here so it is easier to change and easier to read
+  what is going on without seeing 'color: black' everywhere.*/
+h2, table, th, td, button, p, label, span {
+  color: black;
+}
+
 h1 {
   background-color: black;
   color: #5b80b2;
@@ -25,12 +32,7 @@ a {
   color: #5b80b2;
 }
 
-p, label {
-  color: black;
-}
-
 table, th, td {
-  color: black;
   padding: 5px;
 }
 
@@ -42,7 +44,6 @@ input {
 button {
   border-color: black;
   background-color: #5b80b2;
-  color: black;
 }
 
 #welcome_user_msg, #login_or_sign_up {
