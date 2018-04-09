@@ -10,7 +10,7 @@ import datetime
 # default, so add this to prevent more than one user with the same email.
 User._meta.get_field('email')._unique = True
 
-#Require email, first name and last name
+# Require email, first name and last name
 User._meta.get_field('email')._blank = False
 User._meta.get_field('last_name')._blank = False
 User._meta.get_field('first_name')._blank = False
