@@ -24,7 +24,7 @@ class UserEditForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email')
-    about_me = forms.CharField(label='About Me', widget=forms.Textarea(), help_text='What does music mean to you?')
+    about_me = forms.CharField(label='About Me', widget=forms.Textarea())
 
 
 class UserRegistrationForm(UserCreationForm):
