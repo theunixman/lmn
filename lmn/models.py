@@ -25,12 +25,12 @@ class UserInfo(models.Model):
     about_me = models.TextField()
 
     def __str__(self):
-        return "About me: {} {}".format(self.user.name, self.about_me)
+        return "About me: My name is {} and {}".format(self.user.first_name, self.about_me)
 
 
 ''' A music artist '''
 class Artist(models.Model):
-    name = models.CharField(max_length=200, blank=False);
+    name = models.CharField(max_length=200, blank=False)
 
     def __str__(self):
         return "Artist: " + self.name

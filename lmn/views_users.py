@@ -18,28 +18,14 @@ def user_profile(request, user_pk):
 
 @login_required
 def my_user_profile(request):
-
     if request.method == 'POST':
-
-        form = UserEditForm(request.POST)
+        form = UserEditForm(request.POST, instance=request.user)
         # Sees what field values have changed before saving the profile edit form
         if form.is_valid():
-            user = request.user
-            user.username = form.cleaned_data["user_name"]
-            user.first_name = form.cleaned_data["user_first"]
-            user.last_name = form.cleaned_data["user_last"]
-            user.email_address = form.cleaned_data["user_email"]
-            user_about_me = UserInfo(user=user, about_me=form.cleaned_data["user_about_me"])
-            user_about_me.save()
-            user.save()
-
+            user = form.save()
             return redirect('lmn:homepage')
-            # Prepopulate edit profile form with user's data
-            return render(request, 'lmn/users/user_profile.html', {'user' : user , 'user_name' : username, 'user_first' : userfirst, 'user_last' : userlast, 'user_email': useremail, 'user_about_me': useraboutme })
-            
-
     else:
-        form = UserEditForm()
+        form = UserEditForm(instance=request.user)
         return render(request, 'lmn/users/my_user_profile.html', {'form': form})
 
 

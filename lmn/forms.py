@@ -1,7 +1,7 @@
 from django import forms
 from .models import Note
 
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.forms import ValidationError
 
@@ -20,12 +20,11 @@ class NewNoteForm(forms.ModelForm):
         fields = ('title', 'text')
 
 
-class UserEditForm(forms.Form):
-    user_name = forms.CharField(label='User Name')
-    user_first = forms.CharField(label='User First Name')
-    user_last = forms.CharField(label='User Last Name')
-    user_email = forms.EmailField(label='User Email')
-    user_about_me = forms.CharField(label='About Me', widget=forms.Textarea)
+class UserEditForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email')
+    about_me = forms.CharField(label='About Me', widget=forms.Textarea(), help_text='What does music mean to you?')
 
 
 class UserRegistrationForm(UserCreationForm):
