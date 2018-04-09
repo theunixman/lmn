@@ -28,6 +28,10 @@ def my_user_profile(request):
             login(request, user)
             return redirect('lmn:homepage')
 
+        else:
+            message = 'Please check the data you entered'
+            return render(request, 'lmn/users/my_user_profile.html', {'form': form, 'message': message})
+
     else:
         form = UserRegistrationForm()
         return render(request, 'lmn/users/my_user_profile.html', {'form': form})
