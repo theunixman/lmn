@@ -14,25 +14,27 @@
 <div id="note_{{ note.pk }}">
   <h3 class="note_title">{{ note.title }}</h3>
   <p class="show_info"><a href="{% url 'lmn:notes_for_show' show_pk=note.show.pk %}">{{ note.show.artist.name }} at {{ note.show.venue.name }} on {{ note.show.show_date }}</a></p>
+    <P> <img src=" {{ note.picture.url }}" width="300"></P>
   <P class="note_info">Posted on {{ note.posted_date }} by <a class='user' href="{% url 'lmn:user_profile' user_pk=note.user.pk %}">{{ note.user.username }}</a></p>
-  <p class='note_text'>{{ note.text|truncatechars:100 }}</p>
+
   <hr>
 
-{% empty %}
+  {% empty %}
 
-<p>No notes.</p>
+  <p>No notes.</p>
 
-{% endfor %}
+  {% endfor %}
 
-<!-- If this is a list of notes for one show,
-display button to add new note for that show. -->
+  <!-- If this is a list of notes for one show,
+  display button to add new note for that show. -->
 
-{% if show %}
+  {% if show %}
+ 
+  <form action="{% url 'lmn:new_note' show_pk=show.pk %}">
+    <input id="add_note" type='submit' value='Add your own notes'>
+  </form>
 
-<form action="{% url 'lmn:new_note' show_pk=show.pk %}">
-  <input id="add_note" type='submit' value='Add your own notes'>
-</form>
+  {% endif %}
 
-{% endif %}
-
-{% endblock %}
+  {% endblock %}
+</div>

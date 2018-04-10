@@ -9,30 +9,30 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.utils import timezone
 
+from django.core.files.storage import FileSystemStorage
 
 @login_required
 def new_note(request, show_pk):
 
     show = get_object_or_404(Show, pk=show_pk)
 
-    if request.method == 'POST' :
+    if request.method == 'POST':
 
-        form = NewNoteForm(request.POST)
+        form = NewNoteForm(request.POST or None, request.FILES or None)
         if form.is_valid():
-
             note = form.save(commit=False);
             if note.title and note.text:  # If note has both title and text
                 note.user = request.user
                 note.show = show
+                note.picture = note.picture
                 note.posted_date = timezone.now()
                 note.save()
                 return redirect('lmn:note_detail', note_pk=note.pk)
 
-    else :
+    else:
         form = NewNoteForm()
 
     return render(request, 'lmn/notes/new_note.html' , { 'form' : form , 'show':show })
-
 
 
 def latest_notes(request):
@@ -47,7 +47,6 @@ def notes_for_show(request, show_pk):   # pk = show pk
     show = Show.objects.get(pk=show_pk)  # Contains artist, venue
 
     return render(request, 'lmn/notes/note_list.html', {'show': show, 'notes':notes } )
-
 
 
 def note_detail(request, note_pk):
