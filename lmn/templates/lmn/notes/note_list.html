@@ -19,21 +19,22 @@
 
   <hr>
 
-{% empty %}
+  {% empty %}
 
-<p>No notes.</p>
+  <p>No notes.</p>
 
-{% endfor %}
+  {% endfor %}
 
-<!-- If this is a list of notes for one show,
-display button to add new note for that show. -->
+  <!-- If this is a list of notes for one show,
+  display button to add new note for that show. -->
 
-{% if show %}
+  {% if show %}
+ 
+  <form action="{% url 'lmn:new_note' show_pk=show.pk %}">
+    <input id="add_note" type='submit' value='Add your own notes'>
+  </form>
 
-<form action="{% url 'lmn:new_note' show_pk=show.pk %}">
-  <input id="add_note" type='submit' value='Add your own notes'>
-</form>
+  {% endif %}
 
-{% endif %}
-
-{% endblock %}
+  {% endblock %}
+</div>
