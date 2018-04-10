@@ -1,5 +1,49 @@
 body {
-  font-family: monospace;
+  font-family: "monospace";
+  background-color: #4b80c2;
+  padding: 2px;
+}
+
+/*THIS IS TEXT COLOR for text-styled elements.
+  I put it here so it is easier to change and easier to read
+  what is going on without seeing 'color: black' everywhere.*/
+h2, table, th, td, button, p, label, span {
+  color: black;
+}
+
+h1 {
+  background-color: black;
+  color: #4b80c2;
+}
+
+h2 {
+  color: black;
+  padding: 5px;
+}
+
+hr {
+  border: 1px solid #205077;
+}
+
+a {
+  padding: 5px;
+  font-size: 20px;
+  background-color: black;
+  color: #4b80c2;
+}
+
+table, th, td {
+  padding: 5px;
+}
+
+input {
+  border: 2px solid black;
+  background-color: #4b80c2;
+}
+
+button {
+  border-color: black;
+  background-color: #4b80c2;
 }
 
 #welcome_user_msg, #login_or_sign_up {
