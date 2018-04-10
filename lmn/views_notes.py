@@ -51,14 +51,14 @@ def notes_for_show(request, show_pk):   # pk = show pk
 def edit_notes(request, pk):
     notes = get_object_or_404(Post, pk=pk)
     if requested.method == "Post":
-        form = EditNote(request.POST or None, request.FILES, instance=notes)
+        form = NewNote(request.POST or None, request.FILES, instance=notes)
         if form.is_valid():
             notes = form.save(commit=False)
             notes.save()
-            return redirect('lmn:latest_notes')
+            return redirect('lmn:notes')
     else:
-        form = EditNote( instance=notes)
-    return render(request, r'lmn/notes/edit_notes.html', {'form': form})
+        form = NewNote( instance=notes)
+    return render(request, r'lmn/notes/edit.html', {'form': form})
 
 
 @login_required
