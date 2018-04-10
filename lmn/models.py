@@ -29,7 +29,8 @@ class UserInfo(models.Model):
 
 ''' A music artist '''
 class Artist(models.Model):
-    name = models.CharField(max_length=200, blank=False)
+    name = models.CharField(max_length=200, blank=False);
+    picture = models.ImageField(upload_to='pictures/', blank=True)
 
     def __str__(self):
         return "Artist: " + self.name
@@ -40,6 +41,7 @@ class Venue(models.Model):
     name = models.CharField(max_length=200, blank=False, unique=True)
     city = models.CharField(max_length=200, blank=False)
     state = models.CharField(max_length=2, blank=False)  # What about international?
+    picture = models.ImageField(upload_to='pictures/', blank=True)
 
     def __str__(self):
         return 'Venue name: {} in {}, {}'.format(self.name, self.city, self.state)
@@ -50,6 +52,7 @@ class Show(models.Model):
     show_date = models.DateTimeField(blank=False)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE)
+    picture = models.ImageField(upload_to='pictures/', blank=True)
 
     def __str__(self):
         return 'Show with artist {} at {} on {}'.format(self.artist, self.venue, self.show_date)
@@ -60,6 +63,7 @@ class Note(models.Model):
     show = models.ForeignKey(Show, blank=False, on_delete=models.CASCADE)
     user = models.ForeignKey('auth.User', blank=False, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False)
+    picture = models.ImageField(upload_to='pictures/', null=True, blank=True)
     text = models.TextField(max_length=1000, blank=False)
     posted_date = models.DateTimeField(blank=False)
 
