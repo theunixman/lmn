@@ -48,7 +48,6 @@ def notes_for_show(request, show_pk):   # pk = show pk
     return render(request, 'lmn/notes/note_list.html', {'show': show, 'notes':notes } )
 
 
-<<<<<<< HEAD
 @login_required
 def edit_notes(request, pk):
     notes = get_object_or_404(Post, pk=pk)
@@ -70,8 +69,6 @@ def delete_notes(request, pk):
     return redirect('lmn:latest_notes')
 
 
-=======
->>>>>>> 472ae16164194abbeacb44384e856b81408a6d99
 def note_detail(request, note_pk):
     note = get_object_or_404(Note, pk=note_pk)
     return render(request, 'lmn/notes/note_detail.html' , {'note' : note })
