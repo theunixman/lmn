@@ -1,5 +1,5 @@
 from django import forms
-from .models import Note
+from .models import Note, UserInfo
 
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
@@ -22,9 +22,45 @@ class NewNoteForm(forms.ModelForm):
 
 class UserEditForm(UserChangeForm):
     class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'email')
-    about_me = forms.CharField(label='About Me', widget=forms.Textarea())
+        model = UserInfo
+        fields = ('first_name', 'last_name', 'email', 'about_me', )
+        exclude = ('password', )
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data['first_name']
+        if not first_name:
+            raise ValidationError('Please enter your first name')
+
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data['last_name']
+        if not last_name:
+            raise ValidationError('Please enter your last name')
+
+        return last_name
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not email:
+            raise ValidationError('Please enter an email address')
+
+        if User.objects.filter(email__iexact=email).exists():
+            raise ValidationError('A user with that email address already exists')
+
+        return email
+
+    def save(self, commit=True):
+        user = super(UserEditForm, self).save(commit=False)
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.email = self.cleaned_data['email']
+        user.about_me = self.cleaned_data['about_me']
+
+        if commit:
+            user.save()
+
+        return user
 
 
 class UserRegistrationForm(UserCreationForm):
