@@ -79,10 +79,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'lmnop',
-        'USER' : 'lmnop',
-        'PASSWORD' : os.environ['LMNOP_DB_PW'],
-        'HOST' : 'localhost',
-        'PORT' : '5432',
+        'USER': 'lmnop',
+        'PASSWORD': os.environ['LMNOP_DB_PW'],
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

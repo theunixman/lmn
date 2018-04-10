@@ -10,7 +10,7 @@ import datetime
 # default, so add this to prevent more than one user with the same email.
 User._meta.get_field('email')._unique = True
 
-# Require email, first name and last name
+#Require email, first name and last name
 User._meta.get_field('email')._blank = False
 User._meta.get_field('last_name')._blank = False
 User._meta.get_field('first_name')._blank = False
@@ -25,12 +25,12 @@ class UserInfo(models.Model):
     about_me = models.TextField()
 
     def __str__(self):
-        return "About me: My name is {} and {}".format(self.user.first_name, self.about_me)
+        return "About me: {} {}".format(self.user.name, self.about_me)
 
 
 ''' A music artist '''
 class Artist(models.Model):
-    name = models.CharField(max_length=200, blank=False)
+    name = models.CharField(max_length=200, blank=False);
 
     def __str__(self):
         return "Artist: " + self.name
