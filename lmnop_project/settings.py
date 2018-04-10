@@ -25,7 +25,7 @@ SECRET_KEY = '8c01$#j44g3znb)$q0()8)!%ts-jc)k12!a75-!63qb%bj=d4k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 # Application definition
@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',  # to access the media url
             ],
         },
     },
@@ -79,10 +80,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'lmnop',
-        'USER' : 'lmnop',
-        'PASSWORD' : os.environ['LMNOP_DB_PW'],
-        'HOST' : 'localhost',
-        'PORT' : '5432',
+        'USER': 'lmnop',
+        'PASSWORD': os.environ['LMNOP_DB_PW'],
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -126,7 +127,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Where to send user after successful login if no other page is provided.
 # Should provide the user object.
 LOGIN_REDIRECT_URL = 'lmn:my_user_profile'
-LOGOUT_REDIRECT_URL = 'lmn:homepage'
+LOGOUT_REDIRECT_URL = 'lmn:logged_out'

@@ -9,6 +9,7 @@ app_name = 'lmn'
 urlpatterns = [
 
     url(r'^$', views.homepage, name='homepage'),
+    url(r'^logged_out$', views.logged_out, name='logged_out'),
 
     # Venue-related
     url(r'^venues/list/$', views_venues.venue_list, name='venue_list'),
