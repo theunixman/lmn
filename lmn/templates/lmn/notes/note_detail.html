@@ -2,16 +2,11 @@
 {% block content %}
 
 
-<h2 id="note_page_title">{{ note.show.artist.name }} at {{ note.show.venue.name }} 
+<h2 id="note_page_title">{{ note.show.artist.name }} at {{ note.show.venue.name }}
     by <a href="{% url 'lmn:user_profile' user_pk=note.user.pk %}">{{ user.username }}</a></h2>
 
 <p id="note_title"><b>{{ note.title}}</b></p>
-<<<<<<< HEAD
-<p id="note_text">{{ note.text }}</b>
-<!--<a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>-->
-=======
     <p id="note_text">{{ note.text }} </p>
     <img src="{{ note.picture.url }}" width="300">
->>>>>>> 472ae16164194abbeacb44384e856b81408a6d99
 
 {% endblock %}
