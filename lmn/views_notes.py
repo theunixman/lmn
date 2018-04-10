@@ -34,7 +34,6 @@ def new_note(request, show_pk):
     return render(request, 'lmn/notes/new_note.html' , { 'form' : form , 'show':show })
 
 
-
 def latest_notes(request):
     notes = Note.objects.all().order_by('posted_date').reverse()
     return render(request, 'lmn/notes/note_list.html', {'notes':notes})
@@ -45,9 +44,28 @@ def notes_for_show(request, show_pk):   # pk = show pk
     # Notes for show, most recent first
     notes = Note.objects.filter(show=show_pk).order_by('posted_date').reverse()
     show = Show.objects.get(pk=show_pk)  # Contains artist, venue
-
     return render(request, 'lmn/notes/note_list.html', {'show': show, 'notes':notes } )
 
+
+@login_required
+def edit_notes(request, pk):
+    notes = get_object_or_404(Post, pk=pk)
+    if requested.method == "Post":
+        form = EditNote(request.POST or None, request.FILES, instance=notes)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.save()
+            return redirect('lmn:latest_notes')
+    else:
+        form = EditNote( instance=notes)
+    return render(request, r'lmn/notes/edit_notes.html', {'form': form})
+
+
+@login_required
+def delete_notes(request, pk):
+    notes = get_object_or_404(Note, pk=pk)
+    notes.delete()
+    return redirect('lmn:latest_notes')
 
 
 def note_detail(request, note_pk):
