@@ -2,17 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f8080ac2-7fea-4a80-b39a-f5d033065f68" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lmn/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/lmn/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lmn/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/lmn/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lmn/templates/lmn/artists/artist_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/lmn/templates/lmn/artists/artist_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lmn/templates/lmn/notes/new_note.html" beforeDir="false" afterPath="$PROJECT_DIR$/lmn/templates/lmn/notes/new_note.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lmn/templates/lmn/notes/note_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/lmn/templates/lmn/notes/note_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lmn/templates/lmn/notes/note_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/lmn/templates/lmn/notes/note_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lmn/templates/lmn/venues/venue_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/lmn/templates/lmn/venues/venue_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lmn/views_notes.py" beforeDir="false" afterPath="$PROJECT_DIR$/lmn/views_notes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lmnop_project/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/lmnop_project/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lmnop_project/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/lmnop_project/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -189,7 +179,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="152" y="32" width="1754" height="1000" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -197,8 +186,8 @@
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.32946634" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21900827" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.32946634" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21900827" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
