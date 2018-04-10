@@ -29,6 +29,8 @@ class UserInfo(models.Model):
 
 ''' A music artist '''
 class Artist(models.Model):
+    pkey = models.IntegerField(blank=False)
+    sk_id = models.IntegerField(blank=False)
     name = models.CharField(max_length=200, blank=False);
     picture = models.ImageField(upload_to='pictures/', blank=True)
 
@@ -38,6 +40,8 @@ class Artist(models.Model):
 
 ''' A venue, that hosts shows. '''
 class Venue(models.Model):
+    pkey = models.IntegerField(blank=False)
+    sk_id = models.IntegerField(blank=False)
     name = models.CharField(max_length=200, blank=False, unique=True)
     city = models.CharField(max_length=200, blank=False)
     state = models.CharField(max_length=2, blank=False)  # What about international?
@@ -49,6 +53,8 @@ class Venue(models.Model):
 
 ''' A show - one artist playing at one venue at a particular date. '''
 class Show(models.Model):
+    pkey = models.IntegerField(blank=False)
+    sk_id = models.IntegerField(blank=False)
     show_date = models.DateTimeField(blank=False)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE)
