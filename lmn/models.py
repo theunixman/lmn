@@ -15,13 +15,15 @@ User._meta.get_field('email')._blank = False
 User._meta.get_field('last_name')._blank = False
 User._meta.get_field('first_name')._blank = False
 
+
 ''' A User profile '''
 class UserInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    first_name = models.CharField(max_length=200, blank=False)
-    last_name = models.CharField(max_length=200, blank=False)
-    email = models.CharField(max_length=200, blank=False, unique=True)
-    about_me = models.TextField(max_length=1000, blank=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=200, blank=True)
+    last_name = models.CharField(max_length=200, blank=True)
+    email = models.EmailField(max_length=254, blank=True)
+    profile_picture = models.ImageField(upload_to='pictures/', null=True, blank=True)
+    about_me = models.TextField(max_length=1000, null=True)
 
     def __str__(self):
         return "About me: I am {} and {}.".format(self.user.first_name, self.about_me)
@@ -31,7 +33,7 @@ class UserInfo(models.Model):
 class Artist(models.Model):
     pkey = models.IntegerField(blank=False)
     sk_id = models.IntegerField(blank=False)
-    name = models.CharField(max_length=200, blank=False);
+    name = models.CharField(max_length=200, blank=False)
     picture = models.ImageField(upload_to='pictures/', blank=True)
 
     def __str__(self):

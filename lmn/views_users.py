@@ -20,13 +20,13 @@ def user_profile(request, user_pk):
 @login_required
 def my_user_profile(request):
     if request.method == 'POST':
-        form = UserEditForm(request.POST, instance=request.user)
+        form = UserEditForm(request.POST)
         # Sees what field values have changed before saving the profile edit form
         if form.is_valid():
             user = form.save()
             return redirect('lmn:homepage')
     else:
-        form = UserEditForm(instance=request.user)
+        form = UserEditForm()
         return render(request, 'lmn/users/my_user_profile.html', {'form': form})
 
 
