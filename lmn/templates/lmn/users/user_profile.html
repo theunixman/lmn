@@ -8,7 +8,17 @@ Includes list of user's notes with title and preview of text.
 Text truncated to 200 characters. -->
 
 <h2 id='username_notes'>{{ user.username }}'s notes</h2>
-    <p>{{ user.about_me }}</p>
+
+
+{#    THIS CURRENTLY CRASHES THE PAGE, BUT THIS SHOULD WORK ONCE PROFILE PICTURES AND ABOUT ME ARE WORKING#}
+
+{#{% if user.userinfo.user_photo %}#}
+{#    <img src="{% url 'lmn:user_profile_photo' user_pk=user.pk %}" />#}
+{#{% endif %}#}
+{##}
+{#{% if user.userinfo.about_me %}#}
+{#    <p>{{ user.about_me }}</p>#}
+{#{% endif %}#}
 
 {% for note in notes %}
 
