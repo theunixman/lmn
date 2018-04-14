@@ -144,6 +144,10 @@ If you don't use pycharm or that doesn't work, make sure you are in your virtual
 
 CSS not updating: try using an incognito window so CSS isn't stored while you work on it.
 
+If you installed requirements, but your console can't find them, make sure you are in your virtual environment. You
+should see a (venv) at the beginning of your terminal prompt. This will be the name of your virtual environment so if
+you named yours 'myvenv', it should display (myvenv).
+
 requirements issues: make sure requirements in requirements.txt are all spelled correctly such as 'Pillow' vs 'pillo'
 and if a version can't be found, look up the latest valid version to make sure you have a valid version listed.
 
@@ -170,6 +174,10 @@ handle or that their program hasn't been updated to your version yet.
 If you use an unsupported version of MAC, you might need XCODE from the appstore. Last I heard, a lot of versions are
 free. I don't know EXACTLY what it does, but I know it has helped people be able to run code in python, java and C
 languages while using old MACS.
+
+If 'django' isnt recognized, you just opened a repo of a program on your computer or python is not recognized on a
+recently created copy of a repo, you may need to delete your virtual environment and recreate your virtual environment.
+Make sure to activate it afterwards, then install requirements.
 
 If you are running different versions of your program or you are looking at a friend's repo, I do this every time I
 change between those repos: follow the next paragraph of instructions:
