@@ -136,3 +136,42 @@ sudo ln -s /Library/PosgreSQL/9.5/lib/libcrypto.1.0.0.dylib /usr/local/lib`
 
 And this when you start a new shell; or set it permanently in .bash_profile
 `export DYLD_FALLBACK_LIBRARY_PATH=/Library/PostgreSQL/9.5/lib:$DYLD_LIBRARY_PATH`
+
+TROUBLESHOOTING:
+
+'pip' not being recognized as internal or external command, if you use pycharm you probably need to restarting pycharm.
+If you don't use pycharm or that doesn't work, make sure you are in your virtual environment.
+
+CSS not updating: try using an incognito window so CSS isn't stored while you work on it.
+
+requirements issues: make sure requirements in requirements.txt are all spelled correctly such as 'Pillow' vs 'pillo'
+and if a version can't be found, look up the latest valid version to make sure you have a valid version listed.
+
+If attributes or columns can't be found or 'already exist': you probably made changes to your database that overwrite
+current database so drop/delete your database and recreate it. Dont forget to remake your SUPERUSER FROM YOUR TERMINAL.
+This does not mean the user that owns your database.
+
+If your terminal can't recognize a requirement, clean-install it, meaning UNINSTALL before reinstalling. This can be
+necessary for requirements that have been working for months.
+
+If you can't run this program with these instructions, try changing your selenium version in requirements.txt to 3.11.0
+and try using 'ALTER DATABASE lmnop OWNER TO lmnop;' instead of the line in the instructions.
+
+If python, pip, psql, git, or anything else isn't recognized in your terminal, find the path they were installed in and
+ADD THEM TO YOUR COMPUTER PATH VARIABLE this means do NOT replace your current path variable, just append.
+
+If you change your code and you're not seeing the changes apply to your page and restarting your server isn't doing it,
+restart your IDLE or code-editor.
+
+If teammate's code works on their computer, but not on yours be aware of your URL. If you refresh because you were just
+on your own version of the project, you might be in the middle of a process that their version does not know how to
+handle or that their program hasn't been updated to your version yet.
+
+If you are running different versions of your program or you are looking at a friend's repo, I do this every time I
+change between those repos: follow the next paragraph of instructions:
+
+If you are trying to view/run changes to your program or view someone else's version, or nothing else works: delete/drop
+your database, recreate a new one, make sure you're in virtual environment, update pip (if it fails, that's usualy okay,
+but look into it if this STILL doesn't work), install requirements.txt using command line (don't do it through pycharm),
+delete everything in your 'migrations' folder except for '__init__', create migrations, migrate, create superuser,
+runserver, open incognito browser, start from default port and good luck.
