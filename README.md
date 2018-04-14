@@ -167,6 +167,10 @@ If teammate's code works on their computer, but not on yours be aware of your UR
 on your own version of the project, you might be in the middle of a process that their version does not know how to
 handle or that their program hasn't been updated to your version yet.
 
+If you use an unsupported version of MAC, you might need XCODE from the appstore. Last I heard, a lot of versions are
+free. I don't know EXACTLY what it does, but I know it has helped people be able to run code in python, java and C
+languages while using old MACS.
+
 If you are running different versions of your program or you are looking at a friend's repo, I do this every time I
 change between those repos: follow the next paragraph of instructions:
 
