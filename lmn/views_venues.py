@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
+import requests
 from .models import Venue, Artist, Note, Show
 from .forms import VenueSearchForm, NewNoteForm, ArtistSearchForm, UserRegistrationForm
 
