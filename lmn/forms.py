@@ -1,7 +1,6 @@
 from django import forms
 from .models import Note, UserInfo
-
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import ValidationError
 
@@ -20,10 +19,14 @@ class NewNoteForm(forms.ModelForm):
         fields = ('title', 'picture', 'text')
 
 
-class UserEditForm(forms.ModelForm):
-    class Meta:
-        model = UserInfo
-        fields = ('first_name', 'last_name', 'email', 'profile_picture', 'about_me')
+# ***Both Julie and I wrote this code.
+class UserEditForm(forms.Form):
+    first_name = forms.CharField(label='First Name')
+    last_name = forms.CharField(label='Last Name')
+    email = forms.EmailField(label='Email')
+    profile_photo = forms.ImageField(label='Profile Photo', required=False)
+    about_me = forms.CharField(label='About Me', widget=forms.Textarea)
+# ***
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -74,6 +77,7 @@ class UserRegistrationForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        user.userinfo = UserInfo()
 
         if commit:
             user.save()

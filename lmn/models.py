@@ -3,30 +3,30 @@ from django.contrib.auth.models import User
 import datetime
 
 # Every model gets a primary key field by default.
-
 # Users, venues, shows, artists, notes
 
 # User is provided by Django. The email field is not unique by
 # default, so add this to prevent more than one user with the same email.
 User._meta.get_field('email')._unique = True
 
-#Require email, first name and last name
+# Require email, first name and last name
 User._meta.get_field('email')._blank = False
 User._meta.get_field('last_name')._blank = False
 User._meta.get_field('first_name')._blank = False
 
-
 ''' A User profile '''
 class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=200, blank=True)
-    last_name = models.CharField(max_length=200, blank=True)
-    email = models.EmailField(max_length=254, blank=True)
-    profile_picture = models.ImageField(upload_to='pictures/', null=True, blank=True)
-    about_me = models.TextField(max_length=1000, null=True)
+
+# ***Both Julie and I worked on this code.
+    about_me = models.TextField(max_length=1000, blank=True)
+    user_photo_file_name = models.CharField(null=True, max_length=255)
+    user_photo_type = models.CharField(null=True, max_length=255)
+    user_photo = models.BinaryField(null=True, blank=True)
+# ***
 
     def __str__(self):
-        return "About me: I am {} and {}.".format(self.user.first_name, self.about_me)
+        return "About me: " + self.about_me
 
 
 ''' A music artist '''
@@ -80,4 +80,5 @@ class Note(models.Model):
         self.save()
 
     def __str__(self):
-        return 'Note for user ID {} for show ID {} with title {} text {} posted on {}'.format(self.user, self.show, self.title, self.text, self.posted_date)
+        return 'Note for user ID {} for show ID {} with title {} text {} posted on {}'\
+            .format(self.user, self.show, self.title, self.text, self.posted_date)
