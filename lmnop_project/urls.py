@@ -52,7 +52,7 @@ def update_db_from_api() -> None:
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(update_db_from_api, trigger='interval', seconds=10)
+scheduler.add_job(update_db_from_api, trigger='interval', seconds=3600)
 register_events(scheduler)
 scheduler.start()
 
