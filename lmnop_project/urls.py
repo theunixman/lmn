@@ -22,6 +22,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 # from django.views.generic.edit import CreateView
 from pytz import utc
+import datetime
 
 from lmn import views, views_users
 from django.conf import settings
@@ -83,13 +84,20 @@ def fetch_shows(show_data):
 
     for show in show_data:
 
+        artist = None
+        venue = None
+
         if show['venue_id'] is not None and show['venue'] != 'Unknown venue':
             venue = check_db_venue_exists(show)
 
         if show['artist_id'] is not None and show['artist'] != 'Unknown artist':
             artist = check_db_artist_exists(show)
 
-        # db_add_show(show, venue, artist)
+        if artist is not None and venue is not None:
+            # print('show.sk_id = ' + str(show['sk_id']))
+            # print('show.artist = ' + str(artist))
+            # print('show.venue = ' + str(venue))
+            db_add_show(show)
 
 
 def fetch_artist(artist_name):
@@ -148,20 +156,30 @@ def db_add_venue(venue):
     return venue
     pass
 
-def db_add_show(show, show_venue, show_artist):
+def db_add_show(show):
 
     if not Show.objects.filter(sk_id=show['sk_id']).exists():
         print('show not in db...adding')
 
+        artist_id = show['artist_id']
+        venue_id = show['venue_id']
+
+        artist = Artist.objects.get(sk_id=artist_id)
+        venue = Venue.objects.get(sk_id=venue_id)
+
+        show_date = show['date']
+        if show_date is None:
+            utc_dt = datetime.datetime.now(datetime.timezone.utc)
+            dt = utc_dt.astimezone()
+            show_date = dt
+
         new_show = Show(
             pkey=0,
             sk_id=show['sk_id'],
-            show_date=show['date'],
-            artist=show_artist,
-            venue=show_venue)
-            # artist=Artist.objects.filter(sk_id=show_artist['sk_id']),
-            # venue=Venue.objects.filter(sk_id=show_venue['sk_id']))
-
+            show_date=show_date,
+            artist=artist,
+            venue=venue)
+          
         new_show.save()
 
     else:
