@@ -1,0 +1,76 @@
+SHOW -- all not null
+
+    Indexes
+        'lmn_show_pkey' PRIMARY KEY, btree (id)
+        'lmn_show_artist_id_e42fa56f' btree (artist_id)
+        'lmn_show_venue_id_49116d22' btree (venue_id)
+
+    FK_Constraints
+        'lmn_show_artist_id_e42fa56f_fk_lmn_artist_id' FOREIGN_KEY (artist_id) ref lmn_artist(id)
+        'lmn_show_venue_id_49116d22_fk_lmn_venue_id' FOREIGN KEY (venue_id) ref lmn_venue(id)
+
+
+    **why is there pkey and id???
+
+    id
+        int
+        default = "nextval ( 'lmn_show_id_seq'::regclass )
+    pkey
+        int
+    sk_id
+        int
+    show_date
+        timestamp w/ timezone
+    picture
+        character varying(100)
+    artist_id
+        int
+    venue_id
+        int
+
+
+==============================================
+
+ARTIST @ lmn_artist
+
+    Index
+        "lmn_artist_pkey" PRIMARY KEY, btree (id)
+
+    id
+        type = int
+        default = nextval('lmn_artist_id_sq'::regclass)
+    pkey
+        type = int
+    sk_id
+        type = int
+    name
+        type = character varying(200)
+    picture
+        type = charcater varying(100)
+
+
+
+===============================================
+
+VENUE @ lmn_venue
+
+    Indexes
+        'lmn_venue_pkey' PRIMARY KEY, btree (id)
+        'lmn_venue_name_key' UNIQUE CONSTRAINT, btree (name)
+        'lmn_venue_s5ea2dab_like' btree (name varchar_pattern_ops)
+
+    id
+        type = int
+        default = nextval('lmn_venue_id_seq'::regclass)
+    pkey
+        type = int
+    sk_id
+        type = int
+    name
+        type = character varying(200)
+    city
+        type = character varying(200)
+    state
+        type = character varying(2)
+    picture
+        type = character varying(100)
