@@ -13,25 +13,22 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
-# from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
-# from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
-from apscheduler.schedulers.background import BackgroundScheduler
-from django.conf.urls import url, include
-from django.contrib import admin
-from django.contrib.auth import views as auth_views
-# from django.views.generic.edit import CreateView
-from pytz import utc
+
 import datetime
 
-from lmn import views, views_users
-from django.conf import settings
-from django.conf.urls.static import static
 import requests
-from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
+from apscheduler.schedulers.background import BackgroundScheduler
+from django.conf import settings
+from django.conf.urls import url, include
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.contrib.auth import views as auth_views
+from django_apscheduler.jobstores import register_events
 
-# from lmn.data_import.update_scheduler import scheduler
+from lmn import views_users
 from lmn.models import Artist, Venue, Show
+
+# from django.views.generic.edit import CreateView
 
 
 urlpatterns = [
@@ -49,143 +46,110 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
-# jobstores = {
-#     # 'sqlalchemy': SQLAlchemyJobStore(),
-#     'django': DjangoJobStore()
-# }
-#
-# executors = {
-#     'default': ThreadPoolExecutor(20),
-#     'processpool': ProcessPoolExecutor(5)
-# }
-#
-# job_defaults = {
-#     'coalesce': False,
-#     'max_instances': 3
-# }
-
-# scheduler = BackgroundScheduler(jobstores=jobstores, executors=executors, job_defaults=job_defaults, timezone=utc)
-
-
-# scheduler.add_jobstore(DjangoJobStore(), 'djangojobstore')
-
-# @scheduler.scheduled_job(trigger='cron', day='*', hour=0, minute=1, second=1, timezone='US/Central')
-
-scheduler = BackgroundScheduler()
-
-def update_db_from_api():
+def update_db_from_api() -> None:
     update_data = requests.get("http://localhost:5000/events").json()
     fetch_shows(update_data)
 
 
+scheduler = BackgroundScheduler()
 scheduler.add_job(update_db_from_api, trigger='interval', seconds=10)
-
-def fetch_shows(show_data):
-
-    for show in show_data:
-
-        artist = None
-        venue = None
-
-        if show['venue_id'] is not None and show['venue'] != 'Unknown venue':
-            venue = check_db_venue_exists(show)
-
-        if show['artist_id'] is not None and show['artist'] != 'Unknown artist':
-            artist = check_db_artist_exists(show)
-
-        if artist is not None and venue is not None:
-            # print('show.sk_id = ' + str(show['sk_id']))
-            # print('show.artist = ' + str(artist))
-            # print('show.venue = ' + str(venue))
-            db_add_show(show)
+register_events(scheduler)
+scheduler.start()
 
 
-def fetch_artist(artist_name):
-    return artist_name
-    pass
+def fetch_shows(response_data: dict) -> None:
 
-def fetch_venue(venue_name):
-    return venue_name
-    pass
+    for show_data in response_data:
 
-def check_db_artist_exists(show):
-    print('show[artist_id]: ' + str(show['artist_id']))
+        new_artist = None
+        new_venue = None
 
-    new_artist = Artist(
-        sk_id=show['artist_id'],
-        pkey=0,
-        name=show['artist'])
+        if verify_venue_data(show_data):
+            new_venue = build_venue(show_data)
+            add_venue_if_not_exists(show_data, new_venue)
 
-    if not Artist.objects.filter(sk_id=show['artist_id']).exists():
-        print('artist from show not in db...adding')
-        new_artist.save()
+        if verify_artist_data(show_data):
+            new_artist = build_artist(show_data)
+            add_artist_if_not_exists(show_data, new_artist)
 
+        if new_artist is not None and new_venue is not None:
+            new_show = build_show(show_data)
+            add_show_if_not_exists(show_data, new_show)
+
+
+def verify_venue_data(show: dict) -> bool:
+
+    return show['venue_id'] is not None and show['venue'] != 'Unknown venue'
+
+
+def verify_artist_data(show: dict) -> bool:
+
+    return show['artist_id'] is not None and show['artist'] != 'Unknown artist'
+
+
+def build_artist(show: dict) -> Artist:
+
+    new_artist = Artist(sk_id=show['artist_id'],
+                        pkey=0,
+                        name=show['artist'])
     return new_artist
 
-    # else:
-    #     artist = Artist.objects.filter(sk_id=show['artist_id'])
-    #     print('artist present in db')
-    #     return artist
+
+def build_venue(show: dict) -> Venue:
+
+    new_venue = Venue(sk_id=show['venue_id'],
+                      pkey=0,
+                      name=show['venue'],
+                      city=show['city'],
+                      state=show['state'])
+    return new_venue
 
 
-def check_db_venue_exists(show):
-    print('show[venue_id]: ' + str(show['venue_id']))
+def build_show(show: dict) -> Show:
 
-    new_venue = Venue(
-        sk_id=show['venue_id'],
-        pkey=0,
-        name=show['venue'],
-        city=show['city'],
-        state=show['state'])
+    attr = clean_show_attributes(show)
+
+    new_show = Show(pkey=0,
+                    sk_id=show['sk_id'],
+                    show_date=attr['show_date'],
+                    artist=attr['artist'],
+                    venue=attr['venue'])
+    return new_show
+
+
+def add_artist_if_not_exists(show: dict, new_artist: Artist) -> None:
+
+    if not Artist.objects.filter(sk_id=show['artist_id']).exists():
+        new_artist.save()
+
+
+def add_venue_if_not_exists(show: dict, new_venue: Venue) -> None:
 
     if not Venue.objects.filter(sk_id=show['venue_id']).exists():
-        print('venue from show not in db...adding')
-
         new_venue.save()
-    return new_venue
-    # else:
-    #     venue = Venue.objects.filter(sk_id=show['venue_id'])
-    #     print('venue present in db')
-    #     return venue
 
-def db_add_artist(artist):
-    return artist
-    pass
 
-def db_add_venue(venue):
-    return venue
-    pass
-
-def db_add_show(show):
+def add_show_if_not_exists(show: dict, new_show: Show) -> None:
 
     if not Show.objects.filter(sk_id=show['sk_id']).exists():
-        print('show not in db...adding')
-
-        artist_id = show['artist_id']
-        venue_id = show['venue_id']
-
-        artist = Artist.objects.get(sk_id=artist_id)
-        venue = Venue.objects.get(sk_id=venue_id)
-
-        show_date = show['date']
-        if show_date is None:
-            utc_dt = datetime.datetime.now(datetime.timezone.utc)
-            dt = utc_dt.astimezone()
-            show_date = dt
-
-        new_show = Show(
-            pkey=0,
-            sk_id=show['sk_id'],
-            show_date=show_date,
-            artist=artist,
-            venue=venue)
-          
         new_show.save()
 
-    else:
-        print('show present in db')
+
+def clean_show_attributes(show: dict) -> dict:
+
+    artist_id = show['artist_id']
+    venue_id = show['venue_id']
+
+    artist = Artist.objects.get(sk_id=artist_id)
+    venue = Venue.objects.get(sk_id=venue_id)
+
+    show_date = show['date']
+
+    if show_date is None:
+        utc_dt = datetime.datetime.now(datetime.timezone.utc)
+        dt = utc_dt.astimezone()
+        show_date = dt
+
+    return {'artist': artist, 'venue': venue, 'show_date': show_date}
 
 
-register_events(scheduler)
-
-scheduler.start()
