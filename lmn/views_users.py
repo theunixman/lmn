@@ -84,6 +84,8 @@ def register(request):
             user = form.save()
             user = authenticate(username=request.POST['username'], password=request.POST['password1'])
             login(request, user)
+            if 'next' in request.POST:
+                return redirect(request.POST.get('next'))
             return redirect('lmn:homepage')
 
         else:

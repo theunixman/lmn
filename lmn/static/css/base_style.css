@@ -46,7 +46,7 @@ button {
   background-color: #4b80c2;
 }
 
-#welcome_user_msg, #login_or_sign_up {
+#welcome_user_msg, #login_or_sign_up, #sign_up {
   position: absolute;
   right: 0px;
   padding-right: 10px;
