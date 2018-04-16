@@ -30,7 +30,6 @@ from lmn.models import Artist, Venue, Show
 
 # from django.views.generic.edit import CreateView
 
-
 urlpatterns = [
     url(r'^admin/', admin.site.urls),   # Admin site
 
@@ -46,13 +45,20 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
+'''
+=========================================================================
+EVERYTHING BELOW HERE IS FOR THE SCHEDULER THAT AUTO-UPDATES THE DATABASE
+=========================================================================
+'''
+
+
 def update_db_from_api() -> None:
-    update_data = requests.get("http://localhost:5000/events").json()
+    update_data = requests.get("http://localhost:5000/events").json()  # Address of the LMNFlask api
     fetch_shows(update_data)
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(update_db_from_api, trigger='interval', seconds=3600)
+scheduler.add_job(update_db_from_api, trigger='interval', seconds=3600)  # Time between calls to api
 register_events(scheduler)
 scheduler.start()
 

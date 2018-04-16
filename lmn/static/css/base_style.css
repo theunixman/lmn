@@ -60,3 +60,8 @@ button {
 #login_form.th, #registration_form.th {
   text-align: right;
 }
+
+
+html{
+    width: 100%;
+}

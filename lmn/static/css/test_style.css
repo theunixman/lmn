@@ -1,0 +1,69 @@
+
+body {
+    font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+    background-color: #07151d;
+    padding: 2px;
+}
+
+/*THIS IS TEXT COLOR for text-styled elements.
+  I put it here so it is easier to change and easier to read
+  what is going on without seeing 'color: black' everywhere.*/
+h2, table, th, td, button, p, label, span {
+    color: #268bd2;
+}
+
+h1 {
+    background-color: #07151d;
+    color: #dc322f;
+}
+
+h2 {
+    background-color: #07151d;
+    color: #dc322f;
+    padding: 5px;
+}
+
+hr {
+    background-color: #07151d;
+    border: 1px solid #dc322f;
+}
+
+a {
+    padding: 5px;
+    font-size: 20px;
+    background-color: black;
+    color: #dc322f;
+}
+
+table, th, td {
+    background-color: #07151d;
+    color: #dc322f;
+    padding: 5px;
+}
+
+input {
+    border: 2px solid black;
+    background-color: #07151d;
+    color: #dc322f;
+}
+
+button {
+    color: #dc322f;
+    border-color: #dc322f;
+    background-color: #07151d;
+}
+
+#welcome_user_msg, #login_or_sign_up {
+    position: absolute;
+    right: 0px;
+    padding-right: 10px;
+}
+
+#login_form.tr, #registration_form.tr {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+#login_form.th, #registration_form.th {
+    text-align: right;
+}
