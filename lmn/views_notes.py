@@ -78,23 +78,29 @@ def note_detail(request, note_pk):
 @login_required
 def note_edit(request, note_pk):
     note = get_object_or_404(Note, pk=note_pk)
-    show = note.show
+    show = get_object_or_404(Show, pk=note.show.pk)
     if request.method == "POST":
-        form = NewNoteForm(request.POST or None, request.FILES or None)
+        form = NewNoteForm(request.POST or None, request.FILES, instance=note)
         if form.is_valid():
-            note = form.save(commit=False)
-            if note.title and note.text:
-                note.user = request.user
-                note.picture = note.picture
-                note.save()
-                return redirect('lmn/notes/note_detail.html',
-                                {'note': note,
-                                 'show': show})
-
+            note.user = request.user
+            note.show = show
+# This part doesn't work
+#             note.picture = request.FILES.get("profile_photo", False)
+#             note.picture = note.picture
+            note.posted_date = timezone.now()
+            note.save()
+            return redirect('lmn:latest_notes', pk=note.pk)
     else:
-        form = NewNoteForm()
-
+        form = NewNoteForm(instance=note)
     return render(request,
                   'lmn/notes/note_edit.html',
                   {'form': form,
-                   'note': note})
+                   'note': note,
+                   'show': show})
+
+
+@login_required
+def note_remove(request, pk):
+    notes = get_object_or_404(Note, pk=pk)
+    notes.delete()
+    return redirect('lmn:latest_notes')

@@ -6,6 +6,7 @@
 <form method="POST" action="{% url 'lmn:new_note' show_pk=show.pk %}" enctype="multipart/form-data">{% csrf_token %}
   {{ form.as_p }}
   <input type='submit' value='Edit Note'>
+  <input type='submit' value='Edit Note'>
 </form>
 
 {% endblock %}
