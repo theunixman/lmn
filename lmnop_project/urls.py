@@ -59,6 +59,8 @@ def update_db_from_api() -> None:
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_db_from_api, trigger='interval', seconds=3600)  # Time between calls to api
+# @scheduler.scheduled_job(trigger='cron', day='*', hour=0, minute=1, second=1, timezone='US/Central')
+# TODO switch the schedulers above for production
 register_events(scheduler)
 scheduler.start()
 
