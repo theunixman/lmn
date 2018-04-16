@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 
+
 # Every model gets a primary key field by default.
 # Users, venues, shows, artists, notes
 
@@ -28,7 +29,6 @@ class UserInfo(models.Model):
     def __str__(self):
         return "About me: " + self.about_me
 
-
 ''' A music artist '''
 class Artist(models.Model):
     pkey = models.IntegerField(blank=False)
@@ -47,8 +47,7 @@ class Venue(models.Model):
     name = models.CharField(max_length=200, blank=False, unique=True)
     city = models.CharField(max_length=200, blank=False)
     state = models.CharField(max_length=2, blank=False)  # What about international?
-    picture = models.ImageField(upload_to='pictures/', blank=True)  # Adds a image field to upload a picture.
-                                                                    # Blank=true meaning it is optional
+    picture = models.ImageField(upload_to='pictures/', blank=True)
 
     def __str__(self):
         return 'Venue name: {} in {}, {}'.format(self.name, self.city, self.state)

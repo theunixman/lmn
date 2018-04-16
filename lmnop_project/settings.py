@@ -84,6 +84,7 @@ DATABASES = {
         'PASSWORD': os.environ['LMNOP_DB_PW'],
         'HOST': 'localhost',
         'PORT': '5432',
+        'TEST': {'CREATE_DB': False} 
     }
 }
 
