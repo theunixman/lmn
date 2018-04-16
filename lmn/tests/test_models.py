@@ -1,8 +1,16 @@
 from django.test import TestCase
-
+from lmn.models import Note
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 # Create your tests here.
+
+
+class TestNote(TestCase):
+
+    def test_string_representation(self):
+        model = Note(title='test', text='this is a test')
+
+        self.assertEqual(str(model), model.__str__())
 
 
 class TestUser(TestCase):

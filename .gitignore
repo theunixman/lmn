@@ -3,4 +3,5 @@ __pycache__
 media
 env
 *.idea
-venv
+*venv*
+myvenv

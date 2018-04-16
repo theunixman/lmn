@@ -16,7 +16,32 @@ class ArtistSearchForm(forms.Form):
 class NewNoteForm(forms.ModelForm):
     class Meta:
         model = Note
-        fields = ('title', 'picture', 'text')
+        fields = ('title', 'picture', 'text')  # Fields for the new note form
+
+    # Checks picture size
+    def clean_picture(self):
+        picture = self.cleaned_data['picture']
+        kb_limit = 1024 * 1024  # 1 MB
+        if picture:
+            if picture.size > kb_limit:
+                raise ValidationError("Image file is too large ( > 1mb)")  # Picture size limit
+        return picture
+
+    # Checks title validation
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if not title:
+            raise ValidationError('Please enter a title for your note!')
+
+        return title
+
+    # Checks that there is input in txt
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        if not text:
+            raise ValidationError('Please enter a few lines about your experience!')
+
+        return text
 
 
 # ***Both Julie and I wrote this code.

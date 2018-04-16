@@ -1,35 +1,100 @@
 from django.test import TestCase
+from django.core.files import File
+from django.forms import ValidationError
 
 from django.contrib.auth.models import User
 from lmn.forms import NewNoteForm, UserRegistrationForm
 import string
+import os
+
 
 # Test that forms are validating correctly, and don't accept invalid data
-
 class NewNoteFormTests(TestCase):
 
+    # test the text
+    def test_text(self):
+        form_data = {"title": "test", "text": "this is a test"}
+        form = NewNoteForm(form_data)
+
+        self.assertEqual("this is a test", form.text)
+
+    # tests the title
+    def test_title(self):
+        form_data = {"title": "test", "text": "this is a test"}
+        form = NewNoteForm(form_data)
+
+        self.assertEqual("test", form.title)
+
+    # tests wrong file type trying to be uploaded
+    def test_wrong_file_type_upload(self):
+        form_data = {"title": "test", "text": "this is a test"}
+        form = NewNoteForm(form_data)
+        form.picture = File(open("testFile.txt", "w"))
+
+        with self.assertRaises(ValidationError):
+            form.save()
+        os.remove('testFile.txt')
+
+    # tests if a image was uploaded
+    def test_image_upload(self):
+        form_data = {"title": "test", "text": "this is a test"}
+        form = NewNoteForm(form_data)
+        form.picture = File(open("lmn/tests/test2.jpg"))
+        form.save()
+
+        self.assertIsNotNone(form.picture)
+
+    # tests if a validation error is thrown for image size
+    def test_image_size(self):
+        form_data = {"title": "test", "text": "this is a test"}
+        form = NewNoteForm(form_data)
+        form.picture = File(open("lmn/tests/test1.jpg"))
+
+        with self.assertRaises(ValidationError):
+            form.save()
+
+    # tests if image is empty
+    def test_empty_image(self):
+        form_data = {"title": "test", "text": "this is a test"}
+        form = NewNoteForm(form_data)
+        form.save()
+
+        self.assertIsNone(form.picture)
+
+    # tests if the second image was uploaded instead of the first
+    def test_upload_of_multiple_images(self):
+        test_picture = File(open("lmn/tests/test3.jpg"))
+
+        form_data = {"title": "test", "text": "this is a test"}
+        form = NewNoteForm(form_data)
+        form.picture = File(open("lmn/tests/test2.jpg"))
+        form.picture = File(open("lmn/tests/test3.jpg"))
+        form.save()
+
+        self.assertEqual(form.picture.file, test_picture.file)
+
     def test_missing_title_is_invalid(self):
-        form_data = { "text": "blah blah"};
+        form_data = { "text": "blah blah"}
         form = NewNoteForm(form_data)
         self.assertFalse(form.is_valid())
 
         invalid_titles = list(string.whitespace) + ['   ', '\n\n\n', '\t\t\n\t']
 
         for invalid_title in invalid_titles:
-            form_data = { "title" : invalid_title , "text": "blah blah"};
+            form_data = { "title" : invalid_title , "text": "blah blah"}
             form = NewNoteForm(form_data)
             self.assertFalse(form.is_valid())
 
 
     def test_missing_text_is_invalid(self):
-        form_data = { "title" : "blah blah" };
+        form_data = { "title" : "blah blah" }
         form = NewNoteForm(form_data)
         self.assertFalse(form.is_valid())
 
         invalid_texts = list(string.whitespace) + ['   ', '\n\n\n', '\t\t\n\t']
 
         for invalid_text in invalid_texts:
-            form_data = { "title": "blah blah", "text" : invalid_text};
+            form_data = { "title": "blah blah", "text" : invalid_text}
             form = NewNoteForm(form_data)
             self.assertFalse(form.is_valid())
 

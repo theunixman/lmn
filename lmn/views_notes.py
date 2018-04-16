@@ -68,6 +68,27 @@ def notes_for_show(request, show_pk):   # pk = show pk
                    'notes': notes})
 
 
+@login_required
+def edit_notes(request, pk):
+    notes = get_object_or_404(Post, pk=pk)
+    if requested.method == "Post":
+        form = NewNote(request.POST or None, request.FILES, instance=notes)
+        if form.is_valid():
+            notes = form.save(commit=False)
+            notes.save()
+            return redirect('lmn:notes')
+    else:
+        form = NewNote( instance=notes)
+    return render(request, r'lmn/notes/edit.html', {'form': form})
+
+
+@login_required
+def delete_notes(request, pk):
+    notes = get_object_or_404(Note, pk=pk)
+    notes.delete()
+    return redirect('lmn:latest_notes')
+
+
 def note_detail(request, note_pk):
     note = get_object_or_404(Note, pk=note_pk)
     return render(request,
