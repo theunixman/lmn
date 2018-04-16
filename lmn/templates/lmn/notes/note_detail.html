@@ -7,7 +7,7 @@
 
 <p id="note_title"><b>{{ note.title}}</b></p>
     <p id="note_text">{{ note.text }} </p>
-    {% if note.picture.url}}
+    {% if note.picture.url}} <!-- If statement to check if there is a picture to display -->
         <img src="{{ note.picture.url }}" width="300">
     {% endif %}}
 
