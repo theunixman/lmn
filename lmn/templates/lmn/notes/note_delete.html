@@ -1,7 +1,7 @@
 {% extends 'lmn/base.html' %}
 {% block content %}
 
-<h2>Edit note {{ note.title }}</h2>
+<h2>Delete note {{ note.title }}</h2>
 
 <form method="POST" action="{% url 'lmn:new_note' show_pk=show.pk %}" enctype="multipart/form-data">{% csrf_token %}
   {{ form.as_p }}
