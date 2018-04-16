@@ -1,6 +1,7 @@
 {% extends 'lmn/base.html' %}
-{% block content %}
 
+{% block content %}
+<div>
 <h2>Venue List</h2>
 
 <div>
@@ -21,9 +22,7 @@
   <h2 id="venue_list_title">All venues</h2>
 {% endif %}
 
-<div>
-
-{% for venue in venues %}
+{% for venue in venueset %}
 
 <div id="venue_{{ venue.pk }}">
   <P><a href="{% url 'lmn:venue_detail' venue_pk=venue.pk %}">{{ venue.name }}</a>
@@ -36,6 +35,22 @@
   <P>No venues found</p>
 {% endfor %}
 
-</div>
+    <div class="pagination">
+        <span class="step-links">
 
+            {% if venueset.has_previous %}
+                <a href="?page={{ venueset.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                page {{ venueset.number }} of {{ venueset.paginator.num_pages }}.
+            </span>
+
+            {% if venueset.has_next %}
+                <a href="?page={{ venueset.next_page_number }}">next</a>
+            {% endif %}
+
+        </span>
+    </div>
+</div>
 {% endblock %}

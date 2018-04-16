@@ -46,6 +46,13 @@ button {
   background-color: #4b80c2;
 }
 
+.pagination {
+  text-align: center;
+  width: 100%;
+  border: 1px solid black;
+  padding: 10px;
+}
+
 #welcome_user_msg, #login_or_sign_up, #sign_up {
   position: absolute;
   right: 0px;
