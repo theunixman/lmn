@@ -19,6 +19,7 @@
             <P class="note_info">{{ note.show.artist.name }} at {{ note.show.venue.name }} on {{ note.show.show_date }}</P>
             <p class="note_text">{{ note.text|truncatechars:300}}</p>
             <p class="note_posted_at">{{ note.posted_date}}</p>
+            <p class="note_edit"><a href="{% url 'lmn:note_edit' note_pk=note.pk %}">Edit note</a></p>
         </div>
 
     {% empty %}

@@ -31,7 +31,10 @@ def new_note(request, show_pk):
     else:
         form = NewNoteForm()
 
-    return render(request, 'lmn/notes/new_note.html', {'form': form, 'show':show })
+    return render(request,
+                  'lmn/notes/new_note.html',
+                  {'form': form,
+                   'show': show})
 
 
 def latest_notes(request):
@@ -70,3 +73,28 @@ def note_detail(request, note_pk):
     return render(request,
                   'lmn/notes/note_detail.html',
                   {'note': note})
+
+
+@login_required
+def note_edit(request, note_pk):
+    note = get_object_or_404(Note, pk=note_pk)
+    show = note.show
+    if request.method == "POST":
+        form = NewNoteForm(request.POST or None, request.FILES or None)
+        if form.is_valid():
+            note = form.save(commit=False)
+            if note.title and note.text:
+                note.user = request.user
+                note.picture = note.picture
+                note.save()
+                return redirect('lmn/notes/note_detail.html',
+                                {'note': note,
+                                 'show': show})
+
+    else:
+        form = NewNoteForm()
+
+    return render(request,
+                  'lmn/notes/note_edit.html',
+                  {'form': form,
+                   'note': note})
