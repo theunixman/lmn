@@ -105,11 +105,11 @@ def register(request):
             user = form.save()
             user = authenticate(username=request.POST['username'], password=request.POST['password1'])
             login(request, user)
-            return redirect('lmn:my_user_profile')
+            return redirect('lmn:homepage')
 
         else:
             message = 'Please check the data you entered'
-            return render(request, 'registration/register.html', {'form': form, 'message': message})
+            return render(request, 'registrati/register.html', {'form': form, 'message': message})
     else:
         form = UserRegistrationForm()
         return render(request, 'registration/register.html', {'form': form})
