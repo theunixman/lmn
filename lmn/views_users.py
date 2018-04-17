@@ -10,16 +10,39 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponse, Http404
 from PIL import Image
 import io
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 
 def user_profile(request, user_pk):
     user = User.objects.get(pk=user_pk)
+
     if hasattr(user, 'userinfo') and hasattr(user.userinfo, 'about_me'):
         about_me = user.userinfo.about_me
+
     else:
         about_me = 'This user has not finished creating their profile yet.'
+
     usernotes = Note.objects.filter(user=user).order_by('posted_date').reverse()
-    return render(request, 'lmn/users/user_profile.html', {'user': user, 'notes': usernotes, 'about_me': about_me})
+
+    paginator = Paginator(usernotes, 25)
+    page = request.GET.get('page')
+
+    try:
+        noteset = paginator.page(page)
+
+    except PageNotAnInteger:
+        noteset = paginator.page(1)
+
+    except EmptyPage:
+        noteset = paginator.page(paginator.num_pages)
+
+    return render(request,
+                  'lmn/users/user_profile.html',
+                  {'user': user,
+                   'notes': usernotes,
+                   'about_me': about_me,
+                   'noteset': noteset})
 
 
 # ***Julie's code
@@ -105,7 +128,13 @@ def register(request):
             user = form.save()
             user = authenticate(username=request.POST['username'], password=request.POST['password1'])
             login(request, user)
+
             return redirect('lmn:my_user_profile')
+
+            if 'next' in request.POST:
+                return redirect(request.POST.get('next'))
+            return redirect('lmn:homepage')
+
 
         else:
             message = 'Please check the data you entered'

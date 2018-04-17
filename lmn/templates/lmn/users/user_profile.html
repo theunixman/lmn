@@ -1,30 +1,50 @@
 {% extends 'lmn/base.html' %}
 {% block content %}
+<div>
 
-<h2>About Me</h2>
-<p>{{ about_me }}</p>
+    <h2>About Me</h2>
+    <p>{{ about_me }}</p>
 
 {#***Julie's code#}
-{% if user.userinfo.user_photo %}
-    <img src="{% url 'lmn:user_profile_photo' user_pk=user.pk %}" />
-{% endif %}
+    {% if user.userinfo.user_photo %}
+        <img src="{% url 'lmn:user_profile_photo' user_pk=user.pk %}" />
+    {% endif %}
 {#***#}
 
-<h2 id='username_notes'>{{ user.username }}'s notes</h2>
+    <h2 id='username_notes'>{{ user.username }}'s notes</h2>
 
-{% for note in notes %}
-    <div class='note' id="note_{{ note.pk }}">
-      <h3 class="note_title"><a href="{% url 'lmn:note_detail' note_pk=note.pk %}">{{ note.title }}</a></h3>
-      <P class="note_info">{{ note.show.artist.name }} at {{ note.show.venue.name }} on {{ note.show.show_date }}</P>
-      <p class="note_text">{{ note.text|truncatechars:300}}</p>
-      <p class="note_posted_at">{{ note.posted_date}}</p>
+    {% for note in noteset %}
+        <div class='note' id="note_{{ note.pk }}">
+            <h3 class="note_title"><a href="{% url 'lmn:note_detail' note_pk=note.pk %}">{{ note.title }}</a></h3>
+            <P class="note_info">{{ note.show.artist.name }} at {{ note.show.venue.name }} on {{ note.show.show_date }}</P>
+            <p class="note_text">{{ note.text|truncatechars:300}}</p>
+            <p class="note_posted_at">{{ note.posted_date}}</p>
+            <p class="note_edit"><a href="{% url 'lmn:note_edit' note_pk=note.pk %}">Edit note</a></p>
+        </div>
+
+    {% empty %}
+        <p id='no_records'>No notes.</p>
+
+    {% endfor %}
+
+    <P><a href="{% url 'lmn:my_user_profile' %}">Edit Account</a></p>
+
+    <div class="pagination">
+    <span class="step-links">
+
+        {% if noteset.has_previous %}
+            <a href="?page={{ noteset.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            page {{ noteset.number }} of {{ noteset.paginator.num_pages }}.
+        </span>
+
+        {% if noteset.has_next %}
+            <a href="?page={{ noteset.next_page_number }}">next</a>
+        {% endif %}
+
+    </span>
     </div>
-
-{% empty %}
-    <p id='no_records'>No notes.</p>
-
-{% endfor %}
-
-<P><a href="{% url 'lmn:my_user_profile' %}">Edit Account</a></p>
-
+</div>
 {% endblock %}
