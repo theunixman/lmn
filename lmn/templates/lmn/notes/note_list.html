@@ -1,6 +1,29 @@
 {% extends 'lmn/base.html' %}
 
 {% block content %}
+
+
+{% if show %}
+  <h2 id="show_title">Notes for {{ show.artist.name }} at {{ show.venue.name }} on {{ show.show_date }}</h2>
+{% else %}
+  <h2>Latest Notes</h2>
+{% endif %}
+
+
+
+{% for note in notes %}
+
+<div id="note_{{ note.pk }}">
+  <h3 class="note_title">{{ note.title }}</h3>
+  <p class="show_info"><a href="{% url 'lmn:notes_for_show' show_pk=note.show.pk %}">{{ note.show.artist.name }} at {{ note.show.venue.name }} on {{ note.show.show_date }}</a></p>
+    <P> <img src=" {{ note.picture.url }}" width="300"></P>
+  <P class="note_info">Posted on {{ note.posted_date }} by <a class='user' href="{% url 'lmn:user_profile' user_pk=note.user.pk %}">{{ note.user.username }}</a></p>
+  <p class='note_text'>{{ note.text|truncatechars:100 }}</p>
+
+  <hr>
+
+
+{% block content %}
 <div>
 
     {% if show %}
