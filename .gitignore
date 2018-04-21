@@ -7,3 +7,4 @@ env
 myvenv
 .DS_Store
 lib/
+*.vscode
