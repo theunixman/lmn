@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +26,10 @@ SECRET_KEY = '8c01$#j44g3znb)$q0()8)!%ts-jc)k12!a75-!63qb%bj=d4k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1",
+"https://git.heroku.com/thawing-cove-46959.git",
+"*"
+]
 
 
 # Application definition
@@ -136,3 +140,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Should provide the user object.
 LOGIN_REDIRECT_URL = 'lmn:my_user_profile'
 LOGOUT_REDIRECT_URL = 'lmn:logged_out'
+
+django_heroku.settings(locals())
