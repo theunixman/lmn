@@ -1,8 +1,9 @@
 from django.test import TestCase
+
 from lmn.forms import *
 from lmn.views_users import *
 from django.contrib.auth.models import User, UserManager
-from lmn.forms import NewNoteForm, UserEditForm
+from lmn.forms import NewNoteForm, UserEditForm, UserRegistrationForm
 from lmn.models import UserInfo
 from django.test.client import Client
 from io import BytesIO
@@ -10,6 +11,8 @@ from PIL import Image
 from django.urls import reverse
 import string
 from django.db import transaction
+
+
 
 # Test that forms are validating correctly, and don't accept invalid data
 
@@ -144,6 +147,7 @@ class RegistrationFormTests(TestCase):
             self.assertFalse(form.is_valid())
 
 
+
 ##### Reference: http://blog.cynthiakiser.com/blog/2016/06/26/testing-file-uploads-in-django/
 def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
     """
@@ -213,9 +217,6 @@ class UserTests(TestCase):
         response = myClient.post(reverse('lmn:my_user_profile'))
 
         self.assertIsNone(UserInfo.objects.filter(user_id=self.user.id).first())
-
-#################################
-
 
 class LoginFormTests(TestCase):
     pass

@@ -46,26 +46,7 @@ button {
   background-color: #4b80c2;
 }
 
-p.note_text {
-    border: 2px solid black;
-    padding: 10px;
-}
-
-.note {
-    width: 50%;
-    margin-left: 15px;
-    margin-top: 70px;
-    margin-bottom: 70px;
-}
-
-.pagination {
-  text-align: center;
-  width: 100%;
-  border: 1px solid black;
-  padding: 10px;
-}
-
-#welcome_user_msg, #login_or_sign_up, #sign_up {
+#welcome_user_msg, #login_or_sign_up {
   position: absolute;
   right: 0px;
   padding-right: 10px;

@@ -16,33 +16,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def user_profile(request, user_pk):
     user = User.objects.get(pk=user_pk)
-
     if hasattr(user, 'userinfo') and hasattr(user.userinfo, 'about_me'):
         about_me = user.userinfo.about_me
-
     else:
         about_me = 'This user has not finished creating their profile yet.'
-
     usernotes = Note.objects.filter(user=user).order_by('posted_date').reverse()
-
-    paginator = Paginator(usernotes, 25)
-    page = request.GET.get('page')
-
-    try:
-        noteset = paginator.page(page)
-
-    except PageNotAnInteger:
-        noteset = paginator.page(1)
-
-    except EmptyPage:
-        noteset = paginator.page(paginator.num_pages)
-
-    return render(request,
-                  'lmn/users/user_profile.html',
-                  {'user': user,
-                   'notes': usernotes,
-                   'about_me': about_me,
-                   'noteset': noteset})
+    return render(request, 'lmn/users/user_profile.html', {'user': user, 'notes': usernotes, 'about_me': about_me})
 
 
 # ***Julie's code
@@ -56,7 +35,8 @@ def user_profile_photo(request, user_pk):
     photo = uinfo.user_photo
     ctype = uinfo.user_photo_type
     return HttpResponse(photo, content_type=ctype)
-# ***
+
+
 
 def crop_photo(cleaned_data, photo):
        
@@ -85,7 +65,7 @@ def update_my_user_profile(request, user, userinfo):
                 about_me = form.cleaned_data.get("about_me", False)
                 photo = request.FILES.get("profile_photo", False)
 
-                # If there's no userinfo, create one.
+                # If there's no userinfo, create one
                 if userinfo is None:
                     userinfo = UserInfo(user_id=user.id)
                     user.userinfo = userinfo
@@ -97,22 +77,45 @@ def update_my_user_profile(request, user, userinfo):
                 # Update the photo only if there's a photo in the form.
                 if x is not None and getattr(photo, 'content_type', None):
                
-    # ***Julie wrote this code.
+
                     userinfo.user_photo_type = photo.content_type
                     userinfo.user_photo_name = photo.name
                     photo = crop_photo(form.cleaned_data,photo)
                     userinfo.user_photo = photo
-    # ***
+    # *********
 
                 user.save()
                 userinfo.save()
                 return form
 
+
 @login_required
 def my_user_profile(request):
-    # Get the current user and the userinfo if there is one.
+    # Get the current user and the userinfo if there is one
     user = request.user
+
     userinfo = UserInfo.objects.filter(user_id=user.id).first()
+
+    if request.method == 'POST':
+        form = UserEditForm(request.POST, request.FILES)
+        if form.is_valid():
+            user.first_name = form.cleaned_data.get("first_name", False)
+            user.last_name = form.cleaned_data.get("last_name", False)
+            user.email = form.cleaned_data.get("email", False)
+            about_me = form.cleaned_data.get("about_me", False)
+            photo = request.FILES.get("profile_photo", False)
+
+            user.userinfo.about_me = about_me
+            if hasattr(photo, 'content_type') and photo.content_type is not None:
+# ***Julie wrote this code.
+                user.userinfo.user_photo_type = photo.content_type
+                user.userinfo.user_photo_name = photo.name
+                user.userinfo.user_photo = photo.read()
+# ***
+
+            user.save()
+            user.userinfo.save()
+
 
     if request.method == 'POST':
         form = update_my_user_profile(request, user, userinfo)
@@ -147,7 +150,6 @@ def register(request):
             login(request, user)
 
             return redirect('lmn:homepage')
-
 
         else:
             message = 'Please check the data you entered'

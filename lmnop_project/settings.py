@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +26,10 @@ SECRET_KEY = '8c01$#j44g3znb)$q0()8)!%ts-jc)k12!a75-!63qb%bj=d4k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1",
+                 "https://sleepy-escarpment-61897.herokuapp.com/",
+"*"
+]
 
 
 # Application definition
@@ -82,18 +86,22 @@ DATABASES = {
         'NAME': 'lmnop',
         'USER': 'lmnop',
         'PASSWORD': os.environ['LMNOP_DB_PW'],
-        'HOST': 'localhost',
+        'HOST': '/cloudsql/lmnop-2905:us-central1:lmnop',
         'PORT': '5432',
 
-        # This ties HTTP request/response to database transactions by default.
-        # Otherwise, Django will easily permit partly-completed database updates
+        # This ties HTTP request/response to db transactions by default
+        # Otherwise, Django will easily permit partly-completed db updates
         'ATOMIC_REQUESTS': True,
 
         # Postgres works best this way, and applications usually assume this implicitly
         'isolation_level': "serializable",
         'TEST': {'CREATE_DB': False} 
+
     }
 }
+
+if not os.getenv('GAE_INSTANCE'):
+    DATABASES['default']['HOST'] = '127.0.0.1'
 
 
 # Password validation
@@ -132,14 +140,23 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-STATIC_URL = '/static/'
+#STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Media files
-MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Google Cloud Storage API creds
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'lmnop-2905'
+GS_STATIC_APP_FILES_BUCKET = 'lmnop-2905.appspot.com'
+STATIC_URL = 'https://storage.googleapis.com/%s/static/' % GS_STATIC_APP_FILES_BUCKET
+MEDIA_URL = 'https://storage.googleapis.com/%s/media/' % GS_BUCKET_NAME
 
 # Where to send user after successful login if no other page is provided.
 # Should provide the user object.
 LOGIN_REDIRECT_URL = 'lmn:my_user_profile'
 LOGOUT_REDIRECT_URL = 'lmn:logged_out'
+
+django_heroku.settings(locals())
