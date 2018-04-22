@@ -1,0 +1,12 @@
+{% extends 'lmn/base.html' %}
+{% block content %}
+
+<h2>Delete note {{ note.title }}</h2>
+
+<form method="POST" action="{% url 'lmn:new_note' show_pk=show.pk %}" enctype="multipart/form-data">{% csrf_token %}
+  {{ form.as_p }}
+  <input type='submit' value='Edit Note'>
+  <p class="note_delete"><a href="{% url 'lmn:note_delete' note_pk=note.pk %}">Delete note</a></p>
+</form>
+
+{% endblock %}

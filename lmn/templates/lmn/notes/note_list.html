@@ -1,4 +1,5 @@
 {% extends 'lmn/base.html' %}
+
 {% block content %}
 
 
@@ -21,23 +22,63 @@
 
   <hr>
 
-  {% empty %}
 
-  <p>No notes.</p>
+{% block content %}
+<div>
 
-  {% endfor %}
-
-  <!-- If this is a list of notes for one show,
-  display button to add new note for that show. -->
-
-  {% if show %}
-
-  <form action="{% url 'lmn:new_note' show_pk=show.pk %}">
-    <input id="add_note" type='submit' value='Add your own notes'>
-  </form>
-
-  {% endif %}
+    {% if show %}
+        <h2 id="show_title">Notes for {{ show.artist.name }} at {{ show.venue.name }} on {{ show.show_date }}</h2>
+    {% else %}
+        <h2>Latest Notes</h2>
+    {% endif %}
 
 
-  {% endblock %}
+    {% for note in noteset %}
+        <div id="note_{{ note.pk }}">
+            <h3 class="note_title">{{ note.title }}</h3>
+          
+            {% if note.picture.url}} <!-- If statement to check if there is a picture to display -->
+                <img src="{{ note.picture.url }}" width="300"> <!-- displays image -->
+            {% endif %}}
+
+          <p class="show_info"><a href="{% url 'lmn:notes_for_show' show_pk=note.show.pk %}">{{ note.show.artist.name }} at {{ note.show.venue.name }} on {{ note.show.show_date }}</a></p>
+            <P> <img src=" {{ note.picture.url }}" width="300"></P>
+            <P class="note_info">Posted on {{ note.posted_date }} by <a class='user' href="{% url 'lmn:user_profile' user_pk=note.user.pk %}">{{ note.user.username }}</a></p>
+            <p class='note_text'>{{ note.text|truncatechars:100 }}</p>
+
+        <hr>
+        </div>
+    {% empty %}
+        <p>No notes.</p>
+    {% endfor %}
+
+    {% if show %}
+        <form action="{% url 'lmn:new_note' show_pk=show.pk %}">
+            <input id="add_note" type='submit' value='Add your own notes'>
+        </form>
+    {% endif %}
+  
+    {% if show %}
+        <form action="{% url 'lmn:new_note' show_pk=show.pk %}">
+          <input id="add_note" type='submit' value='Add your own notes'>
+        </form>
+
+    <div class="pagination">
+    <span class="step-links">
+
+        {% if noteset.has_previous %}
+            <a href="?page={{ noteset.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            page {{ noteset.number }} of {{ noteset.paginator.num_pages }}.
+        </span>
+
+        {% if noteset.has_next %}
+            <a href="?page={{ noteset.next_page_number }}">next</a>
+        {% endif %}
+
+    </span>
+    </div>
 </div>
+{% endblock %}
