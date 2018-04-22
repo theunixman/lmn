@@ -187,5 +187,3 @@ your database, recreate a new one, make sure you're in virtual environment, upda
 but look into it if this STILL doesn't work), install requirements.txt using command line (don't do it through pycharm),
 delete everything in your 'migrations' folder except for '__init__', create migrations, migrate, create superuser,
 runserver, open incognito browser, start from default port and good luck.
-
-If double curly braces aren't working, try reseting your server.

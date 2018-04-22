@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 
-
 # Every model gets a primary key field by default.
 # Users, venues, shows, artists, notes
 
@@ -28,6 +27,7 @@ class UserInfo(models.Model):
 
     def __str__(self):
         return "About me: " + self.about_me
+
 
 ''' A music artist '''
 class Artist(models.Model):

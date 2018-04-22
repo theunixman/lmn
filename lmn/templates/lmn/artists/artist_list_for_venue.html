@@ -1,39 +1,24 @@
 {% extends 'lmn/base.html' %}
 
 {% block content %}
-<div>
 
-    <h2 id="artists_at_venue_title">Artists that have played at {{ venue.name }}</h2>
 
-    {% for show in showset %}
+<h2 id="artists_at_venue_title">Artists that have played at {{ venue.name }}</h2>
 
-    <div class="show" id="show_{{ show.pk }}">
-        <P>{{ show.artist.name}} on {{ show.show_date }}.
-            <a href="{% url 'lmn:notes_for_show' show_pk=show.pk %}">See notes for this show, and add your own</a>
-        </P>
-    </div>
+{% for show in shows %}
 
-    {% empty %}
-        <p id="no_results">We have no records of shows at this venue</p>
-
-    {% endfor %}
-
-    <div class="pagination">
-        <span class="step-links">
-
-            {% if showset.has_previous %}
-                <a href="?page={{ showset.previous_page_number }}">previous</a>
-            {% endif %}
-
-            <span class="current">
-                page {{ showset.number }} of {{ showset.paginator.num_pages }}.
-            </span>
-
-            {% if artistset.has_next %}
-                <a href="?page={{ showset.next_page_number }}">next</a>
-            {% endif %}
-
-        </span>
-    </div>
+<div class="show" id="show_{{ show.pk }}">
+  <P>{{ show.artist.name}} on {{ show.show_date }}.
+    <a href="{% url 'lmn:notes_for_show' show_pk=show.pk %}">See notes for this show, and add your own</a>
+  </P>
 </div>
+
+{% empty %}
+
+  <P id="no_results">We have no records of shows at this venue</p>
+
+{% endfor %}
+
+
+
 {% endblock %}

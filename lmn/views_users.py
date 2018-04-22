@@ -8,41 +8,16 @@ from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponse, Http404
-from PIL import Image
-import io
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 
 
 def user_profile(request, user_pk):
     user = User.objects.get(pk=user_pk)
-
     if hasattr(user, 'userinfo') and hasattr(user.userinfo, 'about_me'):
         about_me = user.userinfo.about_me
-
     else:
         about_me = 'This user has not finished creating their profile yet.'
-
     usernotes = Note.objects.filter(user=user).order_by('posted_date').reverse()
-
-    paginator = Paginator(usernotes, 25)
-    page = request.GET.get('page')
-
-    try:
-        noteset = paginator.page(page)
-
-    except PageNotAnInteger:
-        noteset = paginator.page(1)
-
-    except EmptyPage:
-        noteset = paginator.page(paginator.num_pages)
-
-    return render(request,
-                  'lmn/users/user_profile.html',
-                  {'user': user,
-                   'notes': usernotes,
-                   'about_me': about_me,
-                   'noteset': noteset})
+    return render(request, 'lmn/users/user_profile.html', {'user': user, 'notes': usernotes, 'about_me': about_me})
 
 
 # ***Julie's code
@@ -58,22 +33,6 @@ def user_profile_photo(request, user_pk):
     return HttpResponse(photo, content_type=ctype)
 # ***
 
-def crop_photo(cleaned_data, photo):
-       
-        x = cleaned_data.get('x')
-        y = cleaned_data.get('y')
-        w = cleaned_data.get('width')
-        h = cleaned_data.get('height')
-
-        image = Image.open(photo.file)
-        cropped_image = image.crop((x, y, w+x, h+y))
-        resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
-        buffer = io.BytesIO()
-        resized_image.save(buffer, 'JPEG')
-
-        return buffer.getvalue()
-        
-
 
 @login_required
 def my_user_profile(request):
@@ -88,14 +47,11 @@ def my_user_profile(request):
             photo = request.FILES.get("profile_photo", False)
 
             user.userinfo.about_me = about_me
-            x = form.cleaned_data.get('x', None)
-            if x is not None and hasattr(photo, 'content_type') and photo.content_type is not None:
-           
+            if hasattr(photo, 'content_type') and photo.content_type is not None:
 # ***Julie wrote this code.
                 user.userinfo.user_photo_type = photo.content_type
                 user.userinfo.user_photo_name = photo.name
-                photo = crop_photo(form.cleaned_data,photo)
-                user.userinfo.user_photo = photo
+                user.userinfo.user_photo = photo.read()
 # ***
 
             user.save()
@@ -128,13 +84,7 @@ def register(request):
             user = form.save()
             user = authenticate(username=request.POST['username'], password=request.POST['password1'])
             login(request, user)
-
-            return redirect('lmn:my_user_profile')
-
-            if 'next' in request.POST:
-                return redirect(request.POST.get('next'))
             return redirect('lmn:homepage')
-
 
         else:
             message = 'Please check the data you entered'

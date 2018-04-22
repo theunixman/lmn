@@ -4,13 +4,7 @@
   <title>LMNOP</title>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.min.css">
-  <link rel="stylesheet" href="{% static 'css/base_style.css' %}">
-
-   <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Simple is Better Than Complex{% endblock %}</title>
+  <link rel="stylesheet" href='{% static 'css/base_style.css' %}'>
 </head>
 
 <body>
@@ -21,24 +15,16 @@
     <a href="{% url 'lmn:latest_notes' %}">Notes</a>
 
     {% if user.is_authenticated %}
-        <span id='welcome_user_msg'>You are logged in, <a href="{% url 'lmn:user_profile' user_pk=user.pk %}">{{ user.username }}</a>  <a href="{% url 'logout' %}">Logout</a></span>
+        <span id='welcome_user_msg'>You are logged in, <a href="{% url 'lmn:user_profile' user_pk=user.pk %}">{{ user.username }}</a>.  <a href="{% url 'logout' %}">Logout</a></span>
 
     {% else %}
-        <span id='login_or_sign_up'><a href="{% url 'login' %}?next={{ request.path }}">Login</a> <a href="{% url 'register' %}">Sign Up</a></span>
+        <span id='login_or_sign_up'><a href="{% url 'login' %}?next={{ request.path }}">Login or sign up</a></span>
 
     {% endif %}
 
     <hr>
-     <div class="container">
+
     {% block content %}
     {% endblock %}
-    </div>
-    <script   src="https://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.3.5/cropper.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <!--<script src="{% static 'jquery.copper.js' %}"></script>-->
-    <script src="{% static 'modal.js' %}"></script>
 </body>
 </html>
-
-

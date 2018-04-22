@@ -1,10 +1,11 @@
 *.pyc
 __pycache__
+node_modules/
 media
 env
 *.idea
 *venv*
-myvenv
-.DS_Store
-lib/
 *.vscode
+myvenv
+app.yaml
+postgres_setup.sh
