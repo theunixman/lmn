@@ -85,14 +85,11 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
 
-        # This ties HTTP request/response to database transactions 
-        # by default. Otherwise, Django will easily permit partly-completed
-        # database updates, which are bad, despite the Django team's advice.
-        # They're really not great.
+        # This ties HTTP request/response to database transactions by default.
+        # Otherwise, Django will easily permit partly-completed database updates
         'ATOMIC_REQUESTS': True,
 
-        # Postgres works best this way, and applications usually assume this 
-        # implicitly.
+        # Postgres works best this way, and applications usually assume this implicitly
         'isolation_level': "serializable",
         'TEST': {'CREATE_DB': False} 
     }

@@ -118,7 +118,7 @@ def my_user_profile(request):
         form = update_my_user_profile(request, user, userinfo)
     else:
         # Not a POST
-        # Do not create a new object on a non-POST.
+        # Do not create a new object on a non-POST
         if userinfo is not None:
             about_me = user.userinfo.about_me
             photo = user.userinfo.user_photo
@@ -134,7 +134,7 @@ def my_user_profile(request):
                              "profile photo": photo})
         # ***
 
-    # Render the form for all cases.
+    # Render the form for all cases
     return render(request, 'lmn/users/my_user_profile.html', {'form': form, 'user': user})
 
 
