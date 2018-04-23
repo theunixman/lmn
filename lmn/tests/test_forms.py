@@ -1,8 +1,18 @@
 from django.test import TestCase
 
-from django.contrib.auth.models import User
-from lmn.forms import NewNoteForm, UserRegistrationForm
+from lmn.forms import *
+from lmn.views_users import *
+from django.contrib.auth.models import User, UserManager
+from lmn.forms import NewNoteForm, UserEditForm, UserRegistrationForm
+from lmn.models import UserInfo
+from django.test.client import Client
+from io import BytesIO
+from PIL import Image
+from django.urls import reverse
 import string
+from django.db import transaction
+
+
 
 # Test that forms are validating correctly, and don't accept invalid data
 
@@ -138,6 +148,75 @@ class RegistrationFormTests(TestCase):
 
 
 
+##### Reference: http://blog.cynthiakiser.com/blog/2016/06/26/testing-file-uploads-in-django/
+def create_image(storage, filename, size=(100, 100), image_mode='RGB', image_format='PNG'):
+    """
+    Generate a test image, returning the filename that it was saved as.
+
+    If ``storage`` is ``None``, the BytesIO containing the image data
+    will be passed instead.
+    """
+    data = BytesIO()
+    Image.new(image_mode, size).save(data, image_format)
+    data.seek(0)
+    if not storage:
+        return data
+    image_file = ContentFile(data.read())
+    return storage.save(filename, image_file)
+
+
+class UserTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("me", password="password")
+
+    def test_adding_a_profile_image(self):
+        # Start with no UserInfo, thus no profile pic
+        self.assertFalse(UserInfo.objects.filter(user_id=self.user.id))
+        myClient = Client()
+        myClient.force_login(user=self.user)
+
+        # Set up registration form data
+        photo = create_image(None, 'photo.png')
+        photo_file = BytesIO(photo.getvalue())
+        photo_file.name = 'photo.png'
+        form_data = {'profile_photo': photo_file,
+                    'x': 0,
+                    'y': 0,
+                    'width': 0,
+                    'height': 0,
+                    'first_name': 'Julie',
+                    'last_name': 'Apple',
+                    'email': 'someone@gmail.com',
+                    'about_me': 'someone will read this'}
+
+        # Ensure new userinfo is written since we're not exactly using the HTTP engine.
+        response = myClient.post(reverse('lmn:my_user_profile'), form_data)
+
+        ##self.assertRegex(response.redirect_chain[0][0], r'/users/profile/$')
+        # And now there is a user profile with a profile pic
+        self.assertIsNotNone(UserInfo.objects.filter(user_id=self.user.id).get().user_photo)
+
+    def test_uploading_non_image_file_errors(self):
+        # Start out with no UserInfo (thus no profile pic)
+        self.assertFalse(UserInfo.objects.filter(user_id=self.user.id))
+        myClient = Client()
+        myClient.login(user=self.user.username, password='password')
+
+        # Set registration form data
+        text_file = SimpleUploadedFile('photo.txt', b'this is some text - not an image')
+        form_data = {'profile_photo': text_file,
+                    'x': 0,
+                    'y': 0,
+                    'width': 0,
+                    'height': 0,
+                    'first_name': 'Julie',
+                    'last_name': 'Apple',
+                    'email': 'someone@gmail.com',
+                    'about_me': 'someone will read this'}
+
+        response = myClient.post(reverse('lmn:my_user_profile'))
+
+        self.assertIsNone(UserInfo.objects.filter(user_id=self.user.id).first())
 
 class LoginFormTests(TestCase):
     pass
