@@ -8,5 +8,10 @@ runtime_config:
 env_variables:
   LMNOP_DB_PW: password_here
 
+  # Replace user, password, database, and instance connection name with the values obtained
+  # when configuring your Cloud SQL instance.
+  SQLALCHEMY_DATABASE_URI: >-
+    postgresql+psycopg2://lmnop:password_here@/lmnop?host=/cloudsql/lmnop-2905
+
 beta_settings:
   cloud_sql_instances: lmnop-2905:us-central1:lmnop

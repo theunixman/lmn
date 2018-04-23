@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.views.generic.edit import CreateView
-from lmn import views, views_users
+from lmn import views, views_users, urls
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^accounts/logout/$', auth_views.logout, name='logout'),
     url(r'^register/$', views_users.register, name='register'),
 
-    url(r'^', include('lmn.urls')),
+    url(r'', include('lmn.urls')),
 ]
 
 if settings.DEBUG:
