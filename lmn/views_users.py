@@ -153,7 +153,7 @@ def register(request):
 
         else:
             message = 'Please check the data you entered'
-            return render(request, 'registrati/register.html', {'form': form, 'message': message})
+            return render(request, 'registration/register.html', {'form': form, 'message': message})
     else:
         form = UserRegistrationForm()
         return render(request, 'registration/register.html', {'form': form})
