@@ -102,15 +102,14 @@ def update_my_user_profile(request, user, userinfo):
 
             # Update the userinfo
             userinfo.about_me = about_me
-            x = form.cleaned_data.get('x', None)
+            x = form.cleaned_data.get('id_x', None)
 
             # Update the photo only if there's a photo in the form.
-            if x is not None and getattr(photo, 'content_type', None):
+            if x and getattr(photo, 'content_type', None):
                 userinfo.user_photo_type = photo.content_type
                 userinfo.user_photo_name = photo.name
                 photo = crop_photo(form.cleaned_data,photo)
                 userinfo.user_photo = photo
-                # *********
 
         user.save()
         userinfo.save()
@@ -119,49 +118,33 @@ def update_my_user_profile(request, user, userinfo):
 
     return form
 
-@transaction.atomic
-def update_my_user_profile(request, user, userinfo):
-    """Validate the UserEditForm, then return it after saving.
+@login_required
+def my_user_profile(request):
+    # Get the current user and the userinfo if there is one
+    user = request.user
+    userinfo = getattr(user, "userinfo", None)
 
-    This incorporates the changes from the form, including the cropped
-    photo if there is one, and saves the User and its corresponding
-    UserInfo value. In all cases it returns the UserEditForm.
+     if request.method == 'POST':
+         # Validate and update the user and the userinfo.
+         form = update_my_user_profile(request, user, userinfo)
+     else:
+         # Not a POST
+         # Do not create a new object on a non-POST
+        if userinfo is not None:
+            about_me = user.userinfo.about_me
+            photo = user.userinfo.user_photo
+        else:
+            about_me = ""
+            photo = None
 
-    This must be called from a POST.
-    """
+        form = UserEditForm({"first_name": user.first_name,
+                             "last_name": user.last_name,
+                             "email": user.email,
+                             "about_me": about_me,
+                             "profile_photo": photo})
 
-    assert(request.method == "POST")
-    form = UserEditForm(request.POST, request.FILES)
-    if form.is_valid():
-        user.first_name = form.cleaned_data.get("first_name", False)
-        user.last_name = form.cleaned_data.get("last_name", False)
-        user.email = form.cleaned_data.get("email", False)
-        about_me = form.cleaned_data.get("about_me", False)
-        photo = request.FILES.get("profile_photo", False)
-
-        # If there's no userinfo, create one
-        if userinfo is None:
-            userinfo = UserInfo(user_id=user.id)
-            user.userinfo = userinfo
-
-            # Update the userinfo
-            userinfo.about_me = about_me
-            x = form.cleaned_data.get('x', None)
-
-            # Update the photo only if there's a photo in the form.
-            if x is not None and getattr(photo, 'content_type', None):
-                userinfo.user_photo_type = photo.content_type
-                userinfo.user_photo_name = photo.name
-                photo = crop_photo(form.cleaned_data,photo)
-                userinfo.user_photo = photo
-                # *********
-
-        user.save()
-        userinfo.save()
-    else:
-      print("update_my_user_profile failed:", form.errors)
-
-    return form
+    # Render the form for all cases
+    return render(request, 'lmn/users/my_user_profile.html', {'form': form, 'user': user})
 
 def register(request):
     if request.method == 'POST':
