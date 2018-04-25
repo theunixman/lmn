@@ -60,11 +60,11 @@ def user_profile_photo(request, user_pk):
 
 
 def crop_photo(cleaned_data, photo):
-       
-        x = cleaned_data.get('x')
-        y = cleaned_data.get('y')
-        w = cleaned_data.get('width')
-        h = cleaned_data.get('height')
+
+        x = cleaned_data.get('id_x')
+        y = cleaned_data.get('id_y')
+        w = cleaned_data.get('id_width')
+        h = cleaned_data.get('id_height')
 
         image = Image.open(photo.file)
         cropped_image = image.crop((x, y, w+x, h+y))
@@ -73,72 +73,58 @@ def crop_photo(cleaned_data, photo):
         resized_image.save(buffer, 'JPEG')
 
         return buffer.getvalue()
-        
+
 
 @transaction.atomic
 def update_my_user_profile(request, user, userinfo):
-            assert(request.method == "POST")
-            form = UserEditForm(request.POST, request.FILES)
-            if form.is_valid():
-                user.first_name = form.cleaned_data.get("first_name", False)
-                user.last_name = form.cleaned_data.get("last_name", False)
-                user.email = form.cleaned_data.get("email", False)
-                about_me = form.cleaned_data.get("about_me", False)
-                photo = request.FILES.get("profile_photo", False)
+    """Validate the UserEditForm, then return it after saving.
 
-                # If there's no userinfo, create one
-                if userinfo is None:
-                    userinfo = UserInfo(user_id=user.id)
-                    user.userinfo = userinfo
+    This incorporates the changes from the form, including the cropped
+    photo if there is one, and saves the User and its corresponding
+    UserInfo value. In all cases it returns the UserEditForm.
 
-                # Update the userinfo            
-                userinfo.about_me = about_me
-                x = form.cleaned_data.get('x', None)
+    This must be called from a POST.
+    """
 
-                # Update the photo only if there's a photo in the form.
-                if x is not None and getattr(photo, 'content_type', None):
-               
+    assert(request.method == "POST")
+    form = UserEditForm(request.POST, request.FILES)
+    if form.is_valid():
+        user.first_name = form.cleaned_data.get("first_name", False)
+        user.last_name = form.cleaned_data.get("last_name", False)
+        user.email = form.cleaned_data.get("email", False)
+        about_me = form.cleaned_data.get("about_me", False)
+        photo = request.FILES.get("profile_photo", False)
 
-                    userinfo.user_photo_type = photo.content_type
-                    userinfo.user_photo_name = photo.name
-                    photo = crop_photo(form.cleaned_data,photo)
-                    userinfo.user_photo = photo
-    # *********
+        # If there's no userinfo, create one
+        if userinfo is None:
+            userinfo = UserInfo(user_id=user.id)
+            user.userinfo = userinfo
 
-                user.save()
-                userinfo.save()
-                return form
+            # Update the userinfo
+            userinfo.about_me = about_me
+            x = form.cleaned_data.get('x', None)
 
+            # Update the photo only if there's a photo in the form.
+            if x is not None and getattr(photo, 'content_type', None):
+                userinfo.user_photo_type = photo.content_type
+                userinfo.user_photo_name = photo.name
+                photo = crop_photo(form.cleaned_data,photo)
+                userinfo.user_photo = photo
+                # *********
+
+        user.save()
+        userinfo.save()
+    return form
 
 @login_required
 def my_user_profile(request):
-    # Get the current user and the userinfo if there is one
+
+    # Get the current user and the UserInfo.
     user = request.user
-
-    userinfo = UserInfo.objects.filter(user_id=user.id).first()
-
-    if request.method == 'POST':
-        form = UserEditForm(request.POST, request.FILES)
-        if form.is_valid():
-            user.first_name = form.cleaned_data.get("first_name", False)
-            user.last_name = form.cleaned_data.get("last_name", False)
-            user.email = form.cleaned_data.get("email", False)
-            about_me = form.cleaned_data.get("about_me", False)
-            photo = request.FILES.get("profile_photo", False)
-
-            user.userinfo.about_me = about_me
-            if hasattr(photo, 'content_type') and photo.content_type is not None:
-# ***Julie wrote this code.
-                user.userinfo.user_photo_type = photo.content_type
-                user.userinfo.user_photo_name = photo.name
-                user.userinfo.user_photo = photo.read()
-# ***
-
-            user.save()
-            user.userinfo.save()
-
+    userinfo = user.userinfo
 
     if request.method == 'POST':
+        # Validate and update the user and the userinfo.
         form = update_my_user_profile(request, user, userinfo)
     else:
         # Not a POST
@@ -150,13 +136,11 @@ def my_user_profile(request):
             about_me = ""
             photo = None
 
-        # *** Both Julie and I wrote this code.
         form = UserEditForm({"first_name": user.first_name,
                              "last_name": user.last_name,
                              "email": user.email,
                              "about_me": about_me,
-                             "profile photo": photo})
-        # ***
+                             "profile_photo": photo})
 
     # Render the form for all cases
     return render(request, 'lmn/users/my_user_profile.html', {'form': form, 'user': user})
