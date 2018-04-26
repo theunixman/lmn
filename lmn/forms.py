@@ -18,15 +18,45 @@ class NewNoteForm(forms.ModelForm):
         model = Note
         fields = ('title', 'picture', 'text')
 
+    # Checks picture size
+    def clean_picture(self):
+        picture = self.cleaned_data['picture']
+        kb_limit = 1024 * 1024
+        if picture:
+            if picture.size > kb_limit:
+                raise ValidationError("Image file is too large ( > 1mb)")
+        return picture
+
+    # Checks title validation
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if not title:
+            raise ValidationError('Please enter a title for your note!')
+
+        return title
+
+    # Checks that there is input in txt
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        if not text:
+            raise ValidationError('Please enter a few lines about your experience!')
+
+        return text
+
 
 # ***Both Julie and I wrote this code.
 class UserEditForm(forms.Form):
     first_name = forms.CharField(label='First Name')
     last_name = forms.CharField(label='Last Name')
     email = forms.EmailField(label='Email')
-    profile_photo = forms.ImageField(label='Profile Photo', required=False)
+    profile_photo = forms.ImageField(widget=forms.FileInput(attrs={"id": "id_file"}), label='Profile Photo', required=False)
+    x = forms.FloatField(required=False, widget=forms.HiddenInput(attrs={"id": "id_x"}))
+    y = forms.FloatField(required=False, widget=forms.HiddenInput(attrs={"id": "id_y"}))
+    width = forms.FloatField(required=False, widget=forms.HiddenInput(attrs={"id": "id_width"}))
+    height = forms.FloatField(required=False, widget=forms.HiddenInput(attrs={"id": "id_height"}))
     about_me = forms.CharField(label='About Me', widget=forms.Textarea)
 # ***
+    
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -70,6 +100,8 @@ class UserRegistrationForm(UserCreationForm):
             raise ValidationError('A user with that email address already exists')
 
         return email
+
+
 
     def save(self, commit=True):
         user = super(UserRegistrationForm, self).save(commit=False)
