@@ -100,16 +100,16 @@ def update_my_user_profile(request, user, userinfo):
             userinfo = UserInfo(user_id=user.id)
             user.userinfo = userinfo
 
-            # Update the userinfo
-            userinfo.about_me = about_me
-            x = form.cleaned_data.get('id_x', None)
+        # Update the userinfo
+        userinfo.about_me = about_me
+        x = form.cleaned_data.get('id_x', None)
 
-            # Update the photo only if there's a photo in the form.
-            if x and getattr(photo, 'content_type', None):
-                userinfo.user_photo_type = photo.content_type
-                userinfo.user_photo_name = photo.name
-                photo = crop_photo(form.cleaned_data,photo)
-                userinfo.user_photo = photo
+        # Update the photo only if there's a photo in the form.
+        if x and getattr(photo, 'content_type', None):
+            userinfo.user_photo_type = photo.content_type
+            userinfo.user_photo_name = photo.name
+            photo = crop_photo(form.cleaned_data,photo)
+            userinfo.user_photo = photo
 
         user.save()
         userinfo.save()
