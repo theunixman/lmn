@@ -61,10 +61,10 @@ def user_profile_photo(request, user_pk):
 
 def crop_photo(cleaned_data, photo):
 
-        x = cleaned_data.get('id_x')
-        y = cleaned_data.get('id_y')
-        w = cleaned_data.get('id_width')
-        h = cleaned_data.get('id_height')
+        x = cleaned_data.get('x')
+        y = cleaned_data.get('y')
+        w = cleaned_data.get('width')
+        h = cleaned_data.get('height')
 
         image = Image.open(photo.file)
         cropped_image = image.crop((x, y, w+x, h+y))
@@ -102,10 +102,9 @@ def update_my_user_profile(request, user, userinfo):
 
         # Update the userinfo
         userinfo.about_me = about_me
-        x = form.cleaned_data.get('id_x', None)
 
         # Update the photo only if there's a photo in the form.
-        if x and getattr(photo, 'content_type', None):
+        if form.cleaned_data.get("x", None) and getattr(photo, 'content_type', None):
             userinfo.user_photo_type = photo.content_type
             userinfo.user_photo_name = photo.name
             photo = crop_photo(form.cleaned_data,photo)
